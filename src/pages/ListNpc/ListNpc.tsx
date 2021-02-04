@@ -1,27 +1,24 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
+import { useUserContext } from '../../contexts/userContext';
 import apiService from '../../shared/services/api.service';
 import logo from '../../logo.svg';
 
-const ListNpc: React.FunctionComponent<any> = () => {
+const ListNpc: React.FunctionComponent<{}> = () => {
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const handleLogin = (e: React.MouseEvent) => {
-    e.preventDefault();
-    apiService.login('kizo13@gmail.com', 'admin')
-    .then(res => console.log(res))
-  };
+  const { user, setUser } = useUserContext();
 
   const handleLogout = (e: React.MouseEvent) => {
     e.preventDefault();
     apiService.logout()
-    .then(() => console.log('logged out'))
+      .then(() => setUser(null));
   };
 
   const handleGetUsers = (e: React.MouseEvent) => {
     e.preventDefault();
     apiService.getUsers()
-    .then(users => console.table(users))
+      .then((users) => console.table(users));
   };
 
   return (
@@ -30,7 +27,11 @@ const ListNpc: React.FunctionComponent<any> = () => {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <p>
-            Edit <code>src/App.tsx</code> and save to reload.
+            Edit
+            {' '}
+            <code>src/App.tsx</code>
+            {' '}
+            and save to reload.
           </p>
           <a
             className="App-link"
@@ -40,9 +41,6 @@ const ListNpc: React.FunctionComponent<any> = () => {
           >
             Learn React
           </a>
-          <Button variant="contained" color="primary" disableElevation onClick={handleLogin}>
-            Login
-          </Button>
 
           <Button variant="contained" color="primary" disableElevation onClick={handleLogout}>
             Logout
@@ -51,11 +49,15 @@ const ListNpc: React.FunctionComponent<any> = () => {
           <Button variant="contained" color="primary" disableElevation onClick={handleGetUsers}>
             Get users
           </Button>
-          <p>{API_URL}</p>
+          <div style={{ fontSize: 10 }}>
+            <p>{API_URL}</p>
+            <p>user data from context:</p>
+            <code>{JSON.stringify(user)}</code>
+          </div>
         </header>
       </div>
     </div>
-  )
+  );
 };
 
 export default ListNpc;
