@@ -10,7 +10,19 @@ const ListNpc: React.FunctionComponent<any> = () => {
     e.preventDefault();
     apiService.login('kizo13@gmail.com', 'admin')
     .then(res => console.log(res))
-  }
+  };
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    apiService.logout()
+    .then(() => console.log('logged out'))
+  };
+
+  const handleGetUsers = (e: React.MouseEvent) => {
+    e.preventDefault();
+    apiService.getUsers()
+    .then(users => console.table(users))
+  };
 
   return (
     <div>
@@ -29,7 +41,15 @@ const ListNpc: React.FunctionComponent<any> = () => {
             Learn React
           </a>
           <Button variant="contained" color="primary" disableElevation onClick={handleLogin}>
-            Disable elevation
+            Login
+          </Button>
+
+          <Button variant="contained" color="primary" disableElevation onClick={handleLogout}>
+            Logout
+          </Button>
+
+          <Button variant="contained" color="primary" disableElevation onClick={handleGetUsers}>
+            Get users
           </Button>
           <p>{API_URL}</p>
         </header>

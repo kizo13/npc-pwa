@@ -6,7 +6,7 @@ const initialState: UserContextInitialStateDto = {
 };
 const UserContext = createContext(initialState);
  
-export function UserProvider({ children }: { children: React.ReactNode }) {
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState(null);
  
   return (
