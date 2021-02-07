@@ -1,12 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
+import i18next from 'i18next';
 import Login from './pages/Login';
 import ListNpc from './pages/ListNpc';
 import ProtectedRoute from './components/ProtectedRoute';
+import PublicRoute from './components/PublicRoute';
 import apiService from './shared/services/api.service';
 import { LoginResponseDto } from './shared/dtos/api-responses.dto';
 import { UserContext } from './contexts/userContext';
+import hu from './locale/hu.json';
 import './App.scss';
+
+i18next.init({
+  interpolation: { escapeValue: false },
+  lng: 'hu',
+  resources: {
+    hu: {
+      translation: hu,
+    },
+  },
+});
 
 function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,12 +44,14 @@ function App(): JSX.Element {
       {loading
         ? <div>Loading app...</div>
         : (
-          <UserContext.Provider value={{ user, setUser }}>
-            <Switch>
-              <ProtectedRoute exact path="/" component={ListNpc} />
-              <Route exact path="/login" component={Login} />
-            </Switch>
-          </UserContext.Provider>
+          <I18nextProvider i18n={i18next}>
+            <UserContext.Provider value={{ user, setUser }}>
+              <Switch>
+                <ProtectedRoute exact path="/" component={ListNpc} />
+                <PublicRoute exact path="/login" component={Login} />
+              </Switch>
+            </UserContext.Provider>
+          </I18nextProvider>
         )}
     </>
   );

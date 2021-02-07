@@ -2,6 +2,15 @@
   "common": {
     "buttons": {
       "login": "Bejelentkezés"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Jelszó"
+    }
+  },
+  "pages": {
+    "login": {
+      "loginFailedMessage": "Sikertelen bejelentkezés"
     }
   }
 }
