@@ -33,6 +33,7 @@
     "no-console": "off",
     "no-param-reassign":[2,{"props":false}],
     "react/prop-types":0,
+    "react/require-default-props":0,
     "@typescript-eslint/ban-types":["error",{"extendDefaults":true,"types":{"{}":false}}],
     "react/jsx-props-no-spreading": "off"
   }
