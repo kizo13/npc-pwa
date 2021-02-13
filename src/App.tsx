@@ -27,16 +27,13 @@ function App(): JSX.Element {
   const [user, setUser] = useState<LoginResponseDto | null>(null);
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      setLoading(false);
-    }
-
     apiService.refreshAccessToken()
       .then((refreshData) => {
+        const accessToken = localStorage.getItem('access_token');
         setUser({ ...refreshData, access_token: accessToken } as LoginResponseDto);
         setLoading(false);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (

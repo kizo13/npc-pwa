@@ -44,6 +44,11 @@ const api = {
     .then((res) => {
       localStorage.setItem('access_token', res.data.access_token);
       return res.data;
+    })
+    .catch((err) => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      throw err;
     }),
 
   getUsers: (): Promise<Array<UserDto>> => protectedApi
@@ -62,7 +67,7 @@ protectedApi.interceptors.response.use((response) => response, (error: AxiosErro
     return api.refreshAccessToken().then((tokenData) => {
       error.config.headers.Authorization = `Bearer ${tokenData.access_token}`;
       return axios.request(error.config);
-    });
+    }).catch(() => {});
   }
 
   return Promise.reject(error);
