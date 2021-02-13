@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
@@ -8,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import Logo from '../../components/Logo';
+import LoadingButton from '../../components/LoadingButton';
 import apiService from '../../shared/services/api.service';
 import { useUserContext } from '../../contexts/userContext';
 import { RouteWithLocation } from '../../shared/types/route-with-location.type';
@@ -20,6 +20,7 @@ const Login: React.FunctionComponent<RouteWithLocation<{}>> = ({ location }) => 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [pending, setPending] = React.useState(false);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -32,12 +33,15 @@ const Login: React.FunctionComponent<RouteWithLocation<{}>> = ({ location }) => 
   };
 
   const handleLogin = () => {
+    setPending(true);
     apiService.login(email, password)
       .then((res) => {
         setUser(res);
+        setPending(false);
         history.push(location.state.from || '/');
       })
       .catch((error: AxiosError<LoginResponseDto>) => {
+        setPending(false);
         if (error.response?.status === 403) {
           setSnackbarOpen(true);
         }
@@ -79,7 +83,8 @@ const Login: React.FunctionComponent<RouteWithLocation<{}>> = ({ location }) => 
           onKeyDown={handleKeyDown}
           margin="normal"
         />
-        <Button
+        <LoadingButton
+          loading={pending}
           color="primary"
           variant="contained"
           disableElevation
@@ -87,7 +92,7 @@ const Login: React.FunctionComponent<RouteWithLocation<{}>> = ({ location }) => 
           disabled={email === '' || password === ''}
         >
           {t('common.buttons.login')}
-        </Button>
+        </LoadingButton>
         <Snackbar
           open={snackbarOpen}
           autoHideDuration={5000}
