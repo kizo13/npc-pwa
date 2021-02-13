@@ -1,5 +1,6 @@
 {
   "common": {
+    "title": "NPC",
     "buttons": {
       "login": "Bejelentkezés"
     },
