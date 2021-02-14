@@ -19,6 +19,12 @@
   "pages": {
     "login": {
       "loginFailedMessage": "Sikertelen bejelentkezés"
+    },
+    "logout": {
+      "logoutFailedMessage": {
+        "title": "Sikertelen kijelentkezés",
+        "description": "További információ a konzolon"
+      }
     }
   }
 }

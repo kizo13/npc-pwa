@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Switch } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
-import Login from './pages/Login';
-import ListNpc from './pages/ListNpc';
-import AppBar from './layouts/AppBarLayout';
-import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
+import ProtectedRoute from './components/ProtectedRoute';
+import AppBar from './layouts/AppBarLayout';
+import Login from './pages/Login';
+import ListImages from './pages/ListImages';
+import ListNpcs from './pages/ListNpcs';
+import { ROUTES } from './shared/constants';
 import apiService from './shared/services/api.service';
 import { LoginResponseDto } from './shared/dtos/api-responses.dto';
 import { UserContext } from './contexts/userContext';
@@ -45,8 +47,9 @@ function App(): JSX.Element {
           <I18nextProvider i18n={i18next}>
             <UserContext.Provider value={{ user, setUser }}>
               <Switch>
-                <ProtectedRoute exact path="/" component={ListNpc} layout={AppBar} />
-                <PublicRoute exact path="/login" component={Login} />
+                <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
+                <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
+                <PublicRoute exact path={ROUTES.login} component={Login} />
               </Switch>
             </UserContext.Provider>
           </I18nextProvider>
