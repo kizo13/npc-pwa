@@ -7,6 +7,13 @@
     "labels": {
       "email": "Email",
       "password": "Jelszó"
+    },
+    "layout": {
+      "drawer": {
+        "images": "Képek",
+        "notes": "Jegyzetek",
+        "logout": "Kilépés"
+      }
     }
   },
   "pages": {
