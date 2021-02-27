@@ -12,6 +12,7 @@ import { ROUTES } from './shared/constants';
 import apiService from './shared/services/api.service';
 import { LoginResponseDto } from './shared/dtos/api-responses.dto';
 import { UserContext } from './contexts/userContext';
+import { FilterContext, FilterDto, initialFilterState } from './contexts/filterContext';
 import hu from './locale/hu.json';
 import './App.scss';
 
@@ -28,6 +29,8 @@ i18next.init({
 function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<LoginResponseDto | null>(null);
+  const [filterOpen, setFilterOpen] = useState<boolean>(false);
+  const [filter, setFilter] = useState<FilterDto>(initialFilterState);
 
   useEffect(() => {
     apiService.refreshAccessToken()
@@ -46,11 +49,16 @@ function App(): JSX.Element {
         : (
           <I18nextProvider i18n={i18next}>
             <UserContext.Provider value={{ user, setUser }}>
-              <Switch>
-                <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
-                <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
-                <PublicRoute exact path={ROUTES.login} component={Login} />
-              </Switch>
+              <FilterContext.Provider value={{
+                open: filterOpen, setOpen: setFilterOpen, filter, setFilter,
+              }}
+              >
+                <Switch>
+                  <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
+                  <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
+                  <PublicRoute exact path={ROUTES.login} component={Login} />
+                </Switch>
+              </FilterContext.Provider>
             </UserContext.Provider>
           </I18nextProvider>
         )}

@@ -17,11 +17,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-
 import Add from '@material-ui/icons/Add';
 import Description from '@material-ui/icons/Description';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import FilterList from '@material-ui/icons/FilterList';
+import ImageSearch from '@material-ui/icons/ImageSearch';
 import MenuIcon from '@material-ui/icons/Menu';
 import Panorama from '@material-ui/icons/Panorama';
 import SettingsIcon from '@material-ui/icons/Settings';
@@ -30,6 +29,7 @@ import Avatar from '../../components/Avatar';
 
 import apiService from '../../shared/services/api.service';
 import { useUserContext } from '../../contexts/userContext';
+import { useFilterContext } from '../../contexts/filterContext';
 import { ROUTES } from '../../shared/constants';
 import { version } from '../../../package.json';
 import { LoginResponseDto } from '../../shared/dtos/api-responses.dto';
@@ -67,15 +67,20 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
   const location = useLocation();
   const classes = useStyles();
   const { user, setUser } = useUserContext();
-  const [open, setOpen] = useState(false);
+  const { setOpen } = useFilterContext();
+  const [leftOpen, setLeftOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-  const handleDrawerOpen = (): void => {
-    setOpen(true);
+  const handleLeftDrawerOpen = (): void => {
+    setLeftOpen(true);
   };
 
-  const handleDrawerClose = (): void => {
-    setOpen(false);
+  const handleLeftDrawerClose = (): void => {
+    setLeftOpen(false);
+  };
+
+  const handleRightDrawerOpen = (): void => {
+    setOpen(true);
   };
 
   const handleLogout = (): void => {
@@ -94,7 +99,7 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
     <>
       <AppBarComponent position="sticky">
         <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu" onClick={handleLeftDrawerOpen}>
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
@@ -115,22 +120,23 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
                 aria-label="Filter"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
-                // onClick={handleMenu}
+                onClick={handleRightDrawerOpen}
                 color="inherit"
               >
-                <FilterList />
+                <ImageSearch />
               </IconButton>
             </>
           )}
         </Toolbar>
       </AppBarComponent>
+
       <SwipeableDrawer
         className={classes.drawer}
         classes={{ paper: classes.drawerPaper }}
         anchor="left"
-        open={open}
-        onOpen={handleDrawerOpen}
-        onClose={handleDrawerClose}
+        open={leftOpen}
+        onOpen={handleLeftDrawerOpen}
+        onClose={handleLeftDrawerClose}
       >
         <Card elevation={0}>
           <CardHeader
@@ -148,11 +154,11 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
         </Card>
         <Divider />
         <List>
-          <ListItem button component={NavLink} to={ROUTES.images} activeClassName="Mui-selected" exact onClick={handleDrawerClose}>
+          <ListItem button component={NavLink} to={ROUTES.images} activeClassName="Mui-selected" exact onClick={handleLeftDrawerClose}>
             <ListItemIcon><Panorama /></ListItemIcon>
             <ListItemText primary={t('common.layout.drawer.images')} />
           </ListItem>
-          <ListItem button component={NavLink} to={ROUTES.notes} activeClassName="Mui-selected" exact onClick={handleDrawerClose}>
+          <ListItem button component={NavLink} to={ROUTES.notes} activeClassName="Mui-selected" exact onClick={handleLeftDrawerClose}>
             <ListItemIcon><Description /></ListItemIcon>
             <ListItemText primary={t('common.layout.drawer.notes')} />
           </ListItem>
@@ -168,6 +174,7 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
           </div>
         </List>
       </SwipeableDrawer>
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}

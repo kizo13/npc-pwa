@@ -1,6 +1,11 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import qs from 'qs';
 import { UserDto } from '../dtos/entities.dto';
-import { LoginResponseDto, TokenResponseDto } from '../dtos/api-responses.dto';
+import {
+  LoginResponseDto, NpcsPaginatedDto, TokenResponseDto,
+} from '../dtos/api-responses.dto';
+import { FilterDto } from '../../contexts/filterContext';
+import { PaginationDto } from '../dtos/pagination.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -52,7 +57,21 @@ const api = {
     }),
 
   getUsers: (): Promise<Array<UserDto>> => protectedApi
-    .get('/users')
+    .get<Array<UserDto>>('/users')
+    .then((res) => res.data),
+
+  getNpcs: (filter: FilterDto, pagination: PaginationDto): Promise<NpcsPaginatedDto> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const clearedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''));
+    const query: PaginationDto = { ...pagination, filter: clearedFilter };
+    const queryStr = qs.stringify(query);
+    return protectedApi
+      .get<NpcsPaginatedDto>(`/npcs${queryStr ? `?${queryStr}` : ''}`)
+      .then((res) => res.data);
+  },
+
+  getAvailableClasses: (filter?: string): Promise<Array<string>> => protectedApi
+    .get<Array<string>>('/npcs/classes', { params: { filter } })
     .then((res) => res.data),
 };
 

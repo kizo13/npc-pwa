@@ -8,11 +8,63 @@
       "email": "Email",
       "password": "Jelszó"
     },
+    "enums": {
+      "age": {
+        "cat1": "I. korosztály",
+        "cat2": "II. korosztály",
+        "cat3": "III. korosztály",
+        "cat4": "IV. korosztály",
+        "cat5": "V. korosztály",
+        "cat6": "VI. korosztály"
+      },
+      "culture": {
+        "aszisz": "Aszisz",
+        "crantai": "Crantai",
+        "dwoon": "Dwoon",
+        "dzsad": "Dzsad",
+        "elf": "Elf",
+        "enoszukei": "Enoszukei",
+        "erv": "Erv",
+        "goblin": "Goblin",
+        "gorviki": "Gorviki",
+        "ilanori": "Ilanori",
+        "korg": "Korg",
+        "krani": "Kráni",
+        "kyr_toroni": "Kyr/Toroni",
+        "nomad": "Nomád",
+        "ork": "Ork",
+        "pyarroni": "Pyarroni",
+        "shadoni": "Shadoni",
+        "torpe": "Törpe"
+      },
+      "gender": {
+        "MALE": "Férfi",
+        "FEMALE": "Nő"
+      },
+      "race": {
+        "AMUND": "Amund",
+        "DZSENN": "Dzsenn",
+        "ELF": "Elf",
+        "EMBER": "Ember",
+        "FELELF": "Félelf",
+        "GNOM": "Gnóm",
+        "GOBLIN": "Goblin",
+        "KHAL": "Khál",
+        "TORPE": "Törpe",
+        "UDVARI_ORK": "Udvari ork",
+        "VADORK": "Vadork",
+        "WIER": "Wier"
+      }
+    },
     "layout": {
       "drawer": {
         "images": "Képek",
         "notes": "Jegyzetek",
         "logout": "Kilépés"
+      },
+      "filter": {
+        "clearAllButton": "Összes törlése",
+        "filterButton": "Szűrés"
       }
     }
   },
