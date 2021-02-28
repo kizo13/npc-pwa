@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Switch } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
+import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
 import PublicRoute from './components/PublicRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 import AppBar from './layouts/AppBarLayout';
@@ -26,6 +27,10 @@ i18next.init({
   },
 });
 
+const generateClassName = createGenerateClassName({
+  productionPrefix: 'npc',
+});
+
 function App(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(true);
   const [user, setUser] = useState<LoginResponseDto | null>(null);
@@ -48,18 +53,20 @@ function App(): JSX.Element {
         ? <div>Loading app...</div>
         : (
           <I18nextProvider i18n={i18next}>
-            <UserContext.Provider value={{ user, setUser }}>
-              <FilterContext.Provider value={{
-                open: filterOpen, setOpen: setFilterOpen, filter, setFilter,
-              }}
-              >
-                <Switch>
-                  <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
-                  <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
-                  <PublicRoute exact path={ROUTES.login} component={Login} />
-                </Switch>
-              </FilterContext.Provider>
-            </UserContext.Provider>
+            <StylesProvider generateClassName={generateClassName}>
+              <UserContext.Provider value={{ user, setUser }}>
+                <FilterContext.Provider value={{
+                  open: filterOpen, setOpen: setFilterOpen, filter, setFilter,
+                }}
+                >
+                  <Switch>
+                    <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
+                    <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
+                    <PublicRoute exact path={ROUTES.login} component={Login} />
+                  </Switch>
+                </FilterContext.Provider>
+              </UserContext.Provider>
+            </StylesProvider>
           </I18nextProvider>
         )}
     </>

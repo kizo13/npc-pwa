@@ -12,6 +12,7 @@ import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/lab/Pagination';
 import Schedule from '@material-ui/icons/Schedule';
 import Wc from '@material-ui/icons/Wc';
 import Publish from '@material-ui/icons/Publish';
@@ -26,6 +27,10 @@ import { PaginationDto } from '../../shared/dtos/pagination.dto';
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
+    minHeight: `calc(100vh - 48px - ${2 * theme.spacing(2)}px)`,
   },
   chip: {
     margin: theme.spacing(0.5),
@@ -34,9 +39,16 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
   },
+  imageGrid: {
+    flex: 1,
+    overflow: 'auto',
+  },
   imageCardRowIcon: {
     marginRight: theme.spacing(1),
     verticalAlign: 'text-top',
+  },
+  pagination: {
+    paddingTop: theme.spacing(2),
   },
 }));
 
@@ -48,14 +60,16 @@ const ListImages: React.FunctionComponent<{}> = () => {
     filter, setFilter, open, setOpen,
   } = useFilterContext();
   const [npcs, setNpcs] = useState<NpcsPaginatedDto | null>(null);
+  const [showPaginator, setShowPaginator] = useState<boolean>(false);
   const [pending, setPending] = useState<boolean>(false);
-  const [pagination] = useState<PaginationDto>({ page: 1, limit: 1 }); // TODO: , setPagination
+  const [pagination, setPagination] = useState<PaginationDto>({ page: 1, limit: 10 });
 
   useEffect(() => {
     if (user) {
       setPending(true);
       apiService.getNpcs(filter, pagination).then((npcsList) => {
         setNpcs(npcsList);
+        setShowPaginator(Math.ceil(npcsList.totalCount / npcsList.limit) > 1);
         setPending(false);
       });
     }
@@ -68,6 +82,10 @@ const ListImages: React.FunctionComponent<{}> = () => {
     setFilter(f);
   };
 
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setPagination({ ...pagination, page });
+  };
+
   return (
     <div className={classes.root}>
       <NpcFilter onFilter={handleGetNpcs} />
@@ -77,6 +95,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
           {(!npcs || npcs.totalCount === 0) && 'No data'}
           {(npcs && npcs.totalCount > 0) && (
             <Grid
+              className={classes.imageGrid}
               container
               spacing={2}
               direction="row"
@@ -131,15 +150,16 @@ const ListImages: React.FunctionComponent<{}> = () => {
                     </CardActions>
                   </Card>
                 </Grid>
-
-                // <div key={npc.id}><img src={`data:image/png;base64,${npc.blob}`} alt={`${npc.id}`} /></div>
               ))}
             </Grid>
-            // <div className={classes.images}>
-            //   {npcs.data.map((npc) => (
-            //     <div key={npc.id}><img src={`data:image/png;base64,${npc.blob}`} alt={`${npc.id}`} /></div>
-            //   ))}
-            // </div>
+          )}
+          {(showPaginator && npcs) && (
+            <Pagination
+              className={classes.pagination}
+              count={Math.ceil(npcs.totalCount / npcs.limit)}
+              page={npcs.page}
+              onChange={handlePageChange}
+            />
           )}
         </>
       )}
