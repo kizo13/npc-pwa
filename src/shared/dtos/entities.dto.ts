@@ -21,7 +21,7 @@ export interface NpcDto {
   id: number;
   blob: string;
   gender: GenderEnums;
-  class: string;
+  class: string[];
   age: AgeEnums;
   race: string;
   culture: CultureEnums;

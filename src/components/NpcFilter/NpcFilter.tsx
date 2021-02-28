@@ -10,12 +10,9 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import ToggleButton from '@material-ui/lab/ToggleButton';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import MenuItem from '@material-ui/core/MenuItem';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import red from '@material-ui/core/colors/red';
@@ -74,8 +71,8 @@ interface NpcFilterProps {
 const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
   const classes = useStyles();
   const { t } = useTranslation();
-  const { open, setOpen } = useFilterContext();
-  const [filter, setFilter] = useState(initialFilterState);
+  const { open, setOpen, filter: contextFilter } = useFilterContext();
+  const [filter, setFilter] = useState(contextFilter);
 
   const [openUsers, setOpenUsers] = useState(false);
   const [users, setUsers] = useState<UserDto[] | null>(null);
@@ -158,32 +155,21 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
         <CardContent className={classes.filterMainBlock}>
           {/* UPLOADER */}
           <FormControl className={classes.filterFormControl}>
-            <Autocomplete
+            <InputLabel id="npcfilter-uploader-label">Feltöltő</InputLabel>
+            <Select
+              labelId="npcfilter-uploader-label"
               id="npcfilter-uploader"
               open={openUsers}
               onOpen={() => { setOpenUsers(true); }}
               onClose={() => { setOpenUsers(false); }}
-              getOptionSelected={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.username}
-              options={users || []}
-              loading={loadingUsers}
-              onChange={(e, v) => handleFilterChange('uploaderId', v?.id)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Feltöltő"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loadingUsers ? <CircularProgress color="inherit" size={20} /> : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
-            />
+              value={filter.uploaderId}
+              onChange={(e) => handleFilterChange('uploaderId', e.target.value)}
+            >
+              {(!users === null || !users?.length) && <MenuItem disabled />}
+              {users?.map((user) => (
+                <MenuItem key={user.id} value={user.id}>{user.username}</MenuItem>
+              ))}
+            </Select>
           </FormControl>
           {/* GENDER */}
           <FormControl className={classes.filterFormControl}>
@@ -205,32 +191,21 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           </FormControl>
           {/* CLASSES */}
           <FormControl className={classes.filterFormControl}>
-            <Autocomplete
+            <InputLabel id="npcfilter-class-label">Kaszt</InputLabel>
+            <Select
+              labelId="npcfilter-class-label"
               id="npcfilter-class"
               open={openClasses}
               onOpen={() => { setOpenClasses(true); }}
               onClose={() => { setOpenClasses(false); }}
-              getOptionSelected={(option, value) => option === value}
-              getOptionLabel={(option) => option}
-              options={availableClasses || []}
-              loading={loadingClasses}
-              onChange={(e, v) => handleFilterChange('class', v)}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Kaszt"
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <>
-                        {loadingClasses ? <CircularProgress color="inherit" size={20} /> : null}
-                        {params.InputProps.endAdornment}
-                      </>
-                    ),
-                  }}
-                />
-              )}
-            />
+              value={filter.class}
+              onChange={(e) => handleFilterChange('class', e.target.value)}
+            >
+              {(!availableClasses === null || !availableClasses?.length) && <MenuItem disabled />}
+              {availableClasses?.map((c) => (
+                <MenuItem key={c} value={c}>{c}</MenuItem>
+              ))}
+            </Select>
           </FormControl>
           {/* AGE */}
           <FormControl className={classes.filterFormControl}>

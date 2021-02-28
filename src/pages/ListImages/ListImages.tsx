@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -7,10 +8,14 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import Schedule from '@material-ui/icons/Schedule';
 import Typography from '@material-ui/core/Typography';
+import Schedule from '@material-ui/icons/Schedule';
+import Wc from '@material-ui/icons/Wc';
+import Publish from '@material-ui/icons/Publish';
+import Edit from '@material-ui/icons/Edit';
 import NpcFilter from '../../components/NpcFilter/NpcFilter';
 import { useUserContext } from '../../contexts/userContext';
 import { FilterDto, useFilterContext } from '../../contexts/filterContext';
@@ -22,9 +27,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
   },
-  images: {
-    flexGrow: 1,
-    padding: theme.spacing(1),
+  chip: {
+    margin: theme.spacing(0.5),
   },
   divider: {
     marginTop: theme.spacing(1),
@@ -38,13 +42,14 @@ const useStyles = makeStyles((theme) => ({
 
 const ListImages: React.FunctionComponent<{}> = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const { user } = useUserContext();
   const {
     filter, setFilter, open, setOpen,
   } = useFilterContext();
   const [npcs, setNpcs] = useState<NpcsPaginatedDto | null>(null);
   const [pending, setPending] = useState<boolean>(false);
-  const [pagination] = useState<PaginationDto>({ page: 1, limit: 10 }); // TODO: , setPagination
+  const [pagination] = useState<PaginationDto>({ page: 1, limit: 1 }); // TODO: , setPagination
 
   useEffect(() => {
     if (user) {
@@ -72,7 +77,6 @@ const ListImages: React.FunctionComponent<{}> = () => {
           {(!npcs || npcs.totalCount === 0) && 'No data'}
           {(npcs && npcs.totalCount > 0) && (
             <Grid
-              // className={classes.images}
               container
               spacing={2}
               direction="row"
@@ -81,7 +85,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
             >
               {npcs.data.map((npc) => (
                 <Grid item xs={12} sm={6} md={3} key={npc.id}>
-                  <Card>
+                  <Card elevation={4}>
                     <CardActionArea>
                       <CardMedia
                         component="img"
@@ -90,17 +94,30 @@ const ListImages: React.FunctionComponent<{}> = () => {
                         title="Contemplative Reptile"
                       />
                       <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
-                          Lizard
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                          across all continents except Antarctica
-                        </Typography>
+                        {npc.class?.length !== 0 && (
+                          npc.class.map((c) => (
+                            <Chip key={`${npc.id}-${c}`} className={classes.chip} label={c} />
+                          ))
+                        )}
                         <Divider className={classes.divider} />
+                        <Typography color="textSecondary" component="p">
+                          <Wc className={classes.imageCardRowIcon} fontSize="inherit" />
+                          {t(`common.enums.gender.${npc.gender}`)}
+                        </Typography>
                         <Typography color="textSecondary" component="p">
                           <Schedule className={classes.imageCardRowIcon} fontSize="inherit" />
                           {format(new Date(npc.createdAt), 'yyyy-MM-dd k:mm')}
+                        </Typography>
+                        {npc.modifiedAt && (
+                          <Typography color="textSecondary" component="p">
+                            <Edit className={classes.imageCardRowIcon} fontSize="inherit" />
+                            {format(new Date(npc.modifiedAt), 'yyyy-MM-dd k:mm')}
+                          </Typography>
+                        )}
+                        {/* AGE CULTURE RACE */}
+                        <Typography color="textSecondary" component="p">
+                          <Publish className={classes.imageCardRowIcon} fontSize="inherit" />
+                          {npc.uploader.username}
                         </Typography>
                       </CardContent>
                     </CardActionArea>

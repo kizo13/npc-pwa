@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,12 +24,13 @@ import ImageSearch from '@material-ui/icons/ImageSearch';
 import MenuIcon from '@material-ui/icons/Menu';
 import Panorama from '@material-ui/icons/Panorama';
 import SettingsIcon from '@material-ui/icons/Settings';
+import Clear from '@material-ui/icons/Clear';
 
 import Avatar from '../../components/Avatar';
 
 import apiService from '../../shared/services/api.service';
 import { useUserContext } from '../../contexts/userContext';
-import { useFilterContext } from '../../contexts/filterContext';
+import { initialFilterState, useFilterContext } from '../../contexts/filterContext';
 import { ROUTES } from '../../shared/constants';
 import { version } from '../../../package.json';
 import { LoginResponseDto } from '../../shared/dtos/api-responses.dto';
@@ -67,7 +68,7 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
   const location = useLocation();
   const classes = useStyles();
   const { user, setUser } = useUserContext();
-  const { setOpen } = useFilterContext();
+  const { filter, setFilter, setOpen } = useFilterContext();
   const [leftOpen, setLeftOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
@@ -83,6 +84,10 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
     setOpen(true);
   };
 
+  const handleClearFilters = (): void => {
+    setFilter(initialFilterState);
+  };
+
   const handleLogout = (): void => {
     apiService.logout()
       .then(() => setUser(null))
@@ -94,6 +99,20 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
+
+  const isFilterSet = useMemo(() => {
+    if (
+      filter.age !== initialFilterState.age
+      || filter.class !== initialFilterState.class
+      || filter.culture !== initialFilterState.culture
+      || filter.gender !== initialFilterState.gender
+      || filter.race !== initialFilterState.race
+      || filter.uploaderId !== initialFilterState.uploaderId
+    ) {
+      return true;
+    }
+    return false;
+  }, [filter]);
 
   return (
     <>
@@ -116,6 +135,17 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
               >
                 <Add />
               </IconButton>
+              {isFilterSet && (
+                <IconButton
+                  aria-label="Clear filter"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleClearFilters}
+                  color="inherit"
+                >
+                  <Clear />
+                </IconButton>
+              )}
               <IconButton
                 aria-label="Filter"
                 aria-controls="menu-appbar"
