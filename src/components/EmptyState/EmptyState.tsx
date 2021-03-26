@@ -17,8 +17,7 @@ const useStyles = makeStyles((theme) => ({
     color: grey[700],
   },
   icon: {
-    marginBottom: theme.spacing(2),
-    fontSize: theme.typography.fontSize * 5,
+    fontSize: theme.typography.fontSize * 6,
   },
   actions: {
     marginTop: theme.spacing(2),
@@ -49,7 +48,7 @@ const EmptyState = ({
   return (
     <div className={classes.root}>
       <div className={classes.icon}><Icon fontSize="inherit" /></div>
-      <Typography gutterBottom variant="h5" component="h2">{title}</Typography>
+      <Typography gutterBottom variant="h4" component="h2">{title}</Typography>
       {subtitle && (
         <Typography gutterBottom component="p">{subtitle}</Typography>
       )}
