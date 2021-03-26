@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import isEqual from 'lodash-es/isEqual';
 import { makeStyles } from '@material-ui/core/styles';
 
 import Alert from '@material-ui/lab/Alert';
@@ -17,7 +18,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Add from '@material-ui/icons/Add';
+
+import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import Description from '@material-ui/icons/Description';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import ImageSearch from '@material-ui/icons/ImageSearch';
@@ -25,6 +27,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Panorama from '@material-ui/icons/Panorama';
 import SettingsIcon from '@material-ui/icons/Settings';
 import Clear from '@material-ui/icons/Clear';
+
+import red from '@material-ui/core/colors/red';
 
 import Avatar from '../../components/Avatar';
 
@@ -41,6 +45,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
+  },
+  clearButton: {
+    color: red[700],
   },
   title: {
     flexGrow: 1,
@@ -100,19 +107,7 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
     setSnackbarOpen(false);
   };
 
-  const isFilterSet = useMemo(() => {
-    if (
-      filter.age !== initialFilterState.age
-      || filter.class !== initialFilterState.class
-      || filter.culture !== initialFilterState.culture
-      || filter.gender !== initialFilterState.gender
-      || filter.race !== initialFilterState.race
-      || filter.uploaderId !== initialFilterState.uploaderId
-    ) {
-      return true;
-    }
-    return false;
-  }, [filter]);
+  const isFilterSet = useMemo(() => !isEqual(filter, initialFilterState), [filter]);
 
   return (
     <>
@@ -133,15 +128,15 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
                 // onClick={handleMenu}
                 color="inherit"
               >
-                <Add />
+                <AddPhotoAlternateIcon />
               </IconButton>
               {isFilterSet && (
                 <IconButton
+                  className={classes.clearButton}
                   aria-label="Clear filter"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   onClick={handleClearFilters}
-                  color="inherit"
                 >
                   <Clear />
                 </IconButton>
