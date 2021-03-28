@@ -14,6 +14,7 @@ import apiService from './shared/services/api.service';
 import { LoginResponseDto } from './shared/dtos/api-responses.dto';
 import { UserContext } from './contexts/userContext';
 import { FilterContext, FilterDto, initialFilterState } from './contexts/filterContext';
+import { ToolbarAction, ToolbarContext } from './contexts/toolbarContext';
 import hu from './locale/hu.json';
 import './App.scss';
 
@@ -36,6 +37,7 @@ function App(): JSX.Element {
   const [user, setUser] = useState<LoginResponseDto | null>(null);
   const [filterOpen, setFilterOpen] = useState<boolean>(false);
   const [filter, setFilter] = useState<FilterDto>(initialFilterState);
+  const [actions, setActions] = useState<Array<ToolbarAction>>([]);
 
   useEffect(() => {
     apiService.refreshAccessToken()
@@ -59,11 +61,13 @@ function App(): JSX.Element {
                   open: filterOpen, setOpen: setFilterOpen, filter, setFilter,
                 }}
                 >
-                  <Switch>
-                    <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
-                    <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
-                    <PublicRoute exact path={ROUTES.login} component={Login} />
-                  </Switch>
+                  <ToolbarContext.Provider value={{ actions, setActions }}>
+                    <Switch>
+                      <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
+                      <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
+                      <PublicRoute exact path={ROUTES.login} component={Login} />
+                    </Switch>
+                  </ToolbarContext.Provider>
                 </FilterContext.Provider>
               </UserContext.Provider>
             </StylesProvider>
