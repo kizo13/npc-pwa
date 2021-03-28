@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Button = ({ children, ...rest }: ButtonProps): JSX.Element => {
+const Button = ({ children, ...rest }: ButtonProps<'button'>): JSX.Element => {
   const classes = useStyles();
   return <MatButton className={classes.button} {...rest}>{children}</MatButton>;
 };
