@@ -1,11 +1,12 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { UserDto } from '../dtos/entities.dto';
+import { NpcDto, UserDto } from '../dtos/entities.dto';
 import {
   LoginResponseDto, NpcsPaginatedDto, TokenResponseDto,
 } from '../dtos/api-responses.dto';
 import { FilterDto } from '../../contexts/filterContext';
 import { PaginationDto } from '../dtos/pagination.dto';
+import { CreateNpcDto } from '../dtos/api-requests.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -67,6 +68,31 @@ const api = {
     const queryStr = qs.stringify(query);
     return protectedApi
       .get<NpcsPaginatedDto>(`/npcs${queryStr ? `?${queryStr}` : ''}`)
+      .then((res) => res.data);
+  },
+
+  createNpc: (data: CreateNpcDto): Promise<NpcDto> => {
+    const formData = new FormData();
+    formData.append('file', data.file as File);
+    if (data.age) {
+      formData.append('age', data.age);
+    }
+    if (data.class.length > 0) {
+      data.class
+        .forEach((c) => formData.append('class[]', c.trim()));
+    }
+    if (data.culture) {
+      formData.append('culture', data.culture);
+    }
+    if (data.gender) {
+      formData.append('gender', data.gender);
+    }
+    if (data.race) {
+      formData.append('race', data.race);
+    }
+
+    return protectedApi
+      .post('/npcs', formData)
       .then((res) => res.data);
   },
 

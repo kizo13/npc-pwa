@@ -135,7 +135,11 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
   };
 
   const handleFilterChange = (prop: string, value: unknown) => {
-    setFilter({ ...filter, [prop]: value });
+    let v = value;
+    if (prop === 'gender' && value === null) {
+      v = filter[prop];
+    }
+    setFilter({ ...filter, [prop]: v });
   };
 
   const handleFilterClick = (e: React.MouseEvent) => {
@@ -165,7 +169,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
         <CardContent className={classes.filterMainBlock}>
           {/* UPLOADER */}
           <FormControl className={classes.filterFormControl}>
-            <InputLabel id="npcfilter-uploader-label">Feltöltő</InputLabel>
+            <InputLabel id="npcfilter-uploader-label">{t('common.labels.uploader')}</InputLabel>
             <Select
               labelId="npcfilter-uploader-label"
               id="npcfilter-uploader"
@@ -201,7 +205,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           </FormControl>
           {/* CLASSES */}
           <FormControl className={classes.filterFormControl}>
-            <InputLabel id="npcfilter-class-label">Kaszt</InputLabel>
+            <InputLabel id="npcfilter-class-label">{t('common.labels.class')}</InputLabel>
             <Select
               labelId="npcfilter-class-label"
               id="npcfilter-class"
@@ -219,7 +223,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           </FormControl>
           {/* AGE */}
           <FormControl className={classes.filterFormControl}>
-            <InputLabel id="npcfilter-age-label">Korosztály</InputLabel>
+            <InputLabel id="npcfilter-age-label">{t('common.labels.age')}</InputLabel>
             <Select
               labelId="npcfilter-age-label"
               id="npcfilter-age"
@@ -233,7 +237,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           </FormControl>
           {/* RACE */}
           <FormControl className={classes.filterFormControl}>
-            <InputLabel id="npcfilter-race-label">Faj</InputLabel>
+            <InputLabel id="npcfilter-race-label">{t('common.labels.race')}</InputLabel>
             <Select
               labelId="npcfilter-race-label"
               id="npcfilter-race"
@@ -247,7 +251,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           </FormControl>
           {/* CULTURE */}
           <FormControl className={classes.filterFormControl}>
-            <InputLabel id="npcfilter-culture-label">Kultúrkör</InputLabel>
+            <InputLabel id="npcfilter-culture-label">{t('common.labels.culture')}</InputLabel>
             <Select
               labelId="npcfilter-culture-label"
               id="npcfilter-culture"

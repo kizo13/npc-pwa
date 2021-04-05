@@ -1,10 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useCallback, useEffect, useMemo, useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
-import { format } from 'date-fns';
+import format from 'date-fns/format';
+import formatDistance from 'date-fns/formatDistance';
+import hu from 'date-fns/locale/hu';
+import isEqual from 'lodash-es/isEqual';
 import { makeStyles } from '@material-ui/core/styles';
+import red from '@material-ui/core/colors/red';
+
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -12,14 +18,29 @@ import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
 import Pagination from '@material-ui/lab/Pagination';
+
 import Schedule from '@material-ui/icons/Schedule';
 import Wc from '@material-ui/icons/Wc';
 import Publish from '@material-ui/icons/Publish';
 import Edit from '@material-ui/icons/Edit';
+import Panorama from '@material-ui/icons/Panorama';
+import ChildCare from '@material-ui/icons/ChildCare';
+import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
+import LanguageIcon from '@material-ui/icons/Language';
+import NoteAdd from '@material-ui/icons/NoteAdd';
+import ImageSearch from '@material-ui/icons/ImageSearch';
+import Clear from '@material-ui/icons/Clear';
+import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
+
 import NpcFilter from '../../components/NpcFilter/NpcFilter';
+import EmptyState from '../../components/EmptyState';
+import AddImageDialog from '../../components/AddImageDialog';
+
 import { useUserContext } from '../../contexts/userContext';
-import { FilterDto, useFilterContext } from '../../contexts/filterContext';
+import { FilterDto, useFilterContext, initialFilterState } from '../../contexts/filterContext';
+import { ToolbarAction, useToolbarContext } from '../../contexts/toolbarContext';
 import apiService from '../../shared/services/api.service';
 import { NpcsPaginatedDto } from '../../shared/dtos/api-responses.dto';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
@@ -47,8 +68,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     verticalAlign: 'text-top',
   },
+  imageCardButtonGroup: {
+    justifyContent: 'flex-end',
+  },
   pagination: {
     paddingTop: theme.spacing(2),
+  },
+  clearButton: {
+    color: red[700],
   },
 }));
 
@@ -56,6 +83,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { user } = useUserContext();
+  const { setActions } = useToolbarContext();
   const {
     filter, setFilter, open, setOpen,
   } = useFilterContext();
@@ -63,17 +91,70 @@ const ListImages: React.FunctionComponent<{}> = () => {
   const [showPaginator, setShowPaginator] = useState<boolean>(false);
   const [pending, setPending] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationDto>({ page: 1, limit: 10 });
+  const [addImageDialogOpen, setAddImageDialogOpen] = useState(false);
+
+  const fetchNpcs = useCallback((f: FilterDto, p: PaginationDto) => {
+    setPending(true);
+    apiService.getNpcs(f, p).then((npcsList) => {
+      setNpcs(npcsList);
+      setShowPaginator(Math.ceil(npcsList.totalCount / npcsList.limit) > 1);
+      setPending(false);
+    });
+  }, []);
+
+  const handleAddImageDialogOpen = (): void => {
+    setAddImageDialogOpen(true);
+  };
+
+  const handleAddImageDialogClose = (event: { reload?: boolean }): void => {
+    setAddImageDialogOpen(false);
+    if (event.reload) {
+      fetchNpcs(filter, pagination);
+    }
+  };
+
+  const handleRightDrawerOpen = useCallback((): void => {
+    setOpen(true);
+  }, [setOpen]);
+
+  const handleClearFilters = useCallback((): void => {
+    setFilter(initialFilterState);
+  }, [setFilter]);
+
+  const isFilterSet = useMemo(() => !isEqual(filter, initialFilterState), [filter]);
+
+  const setActionButtons: Array<ToolbarAction> = useMemo(() => [
+    {
+      label: 'Add',
+      onClick: handleAddImageDialogOpen,
+      icon: AddPhotoAlternate,
+    },
+    {
+      label: 'Clear filter',
+      onClick: handleClearFilters,
+      icon: Clear,
+      className: classes.clearButton,
+      isVisible: isFilterSet,
+    },
+    {
+      label: 'Filter',
+      onClick: handleRightDrawerOpen,
+      icon: ImageSearch,
+    },
+  ], [classes.clearButton, handleClearFilters, handleRightDrawerOpen, isFilterSet]);
+
+  useEffect(() => {
+    const actionList: Array<ToolbarAction> = setActionButtons;
+    setActions([...actionList]);
+
+    return () => setActions([]);
+  }, [setActionButtons, setActions]);
 
   useEffect(() => {
     if (user) {
-      setPending(true);
-      apiService.getNpcs(filter, pagination).then((npcsList) => {
-        setNpcs(npcsList);
-        setShowPaginator(Math.ceil(npcsList.totalCount / npcsList.limit) > 1);
-        setPending(false);
-      });
+      fetchNpcs(filter, pagination);
     }
-  }, [user, filter, pagination]);
+  }, [user, filter, pagination, fetchNpcs]);
 
   const handleGetNpcs = (f: FilterDto) => {
     if (open) {
@@ -83,8 +164,19 @@ const ListImages: React.FunctionComponent<{}> = () => {
   };
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    event.preventDefault();
     setPagination({ ...pagination, page });
   };
+
+  const emptyStateActions = useMemo(() => [
+    {
+      label: t('pages.imageList.emptyStateButton'),
+      func: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        event.preventDefault();
+        console.log('Empty state action clicked');
+      },
+    },
+  ], [t]);
 
   return (
     <div className={classes.root}>
@@ -92,7 +184,14 @@ const ListImages: React.FunctionComponent<{}> = () => {
       {pending && 'Loading...'}
       {!pending && (
         <>
-          {(!npcs || npcs.totalCount === 0) && 'No data'}
+          {(!npcs || npcs.totalCount === 0) && (
+            <EmptyState
+              icon={Panorama}
+              title={t('pages.imageList.emptyStateTitle')}
+              subtitle={t('pages.imageList.emptyStateSubtitle')}
+              actions={emptyStateActions}
+            />
+          )}
           {(npcs && npcs.totalCount > 0) && (
             <Grid
               className={classes.imageGrid}
@@ -105,47 +204,60 @@ const ListImages: React.FunctionComponent<{}> = () => {
               {npcs.data.map((npc) => (
                 <Grid item xs={12} sm={6} md={3} key={npc.id}>
                   <Card elevation={4}>
-                    <CardActionArea>
-                      <CardMedia
-                        component="img"
-                        // className={classes.media}
-                        src={`data:image/png;base64,${npc.blob}`}
-                        title="Contemplative Reptile"
-                      />
-                      <CardContent>
-                        {npc.class?.length !== 0 && (
-                          npc.class.map((c) => (
-                            <Chip key={`${npc.id}-${c}`} className={classes.chip} label={c} />
-                          ))
-                        )}
-                        <Divider className={classes.divider} />
+                    <CardMedia component="img" src={`data:image/png;base64,${npc.blob}`} />
+                    <CardContent>
+                      {npc.class?.length !== 0 && (
+                        npc.class.map((c) => (
+                          <Chip key={`${npc.id}-${c}`} className={classes.chip} label={c} />
+                        ))
+                      )}
+                      <Divider className={classes.divider} />
+                      {npc.race && (
                         <Typography color="textSecondary" component="p">
-                          <Wc className={classes.imageCardRowIcon} fontSize="inherit" />
-                          {t(`common.enums.gender.${npc.gender}`)}
+                          <LanguageIcon className={classes.imageCardRowIcon} fontSize="inherit" />
+                          {t(`common.enums.race.${npc.race}`)}
                         </Typography>
+                      )}
+                      <Typography color="textSecondary" component="p">
+                        <Wc className={classes.imageCardRowIcon} fontSize="inherit" />
+                        {t(`common.enums.gender.${npc.gender}`)}
+                      </Typography>
+                      {npc.age && (
                         <Typography color="textSecondary" component="p">
-                          <Schedule className={classes.imageCardRowIcon} fontSize="inherit" />
-                          {format(new Date(npc.createdAt), 'yyyy-MM-dd k:mm')}
+                          <ChildCare className={classes.imageCardRowIcon} fontSize="inherit" />
+                          {t(`common.enums.age.${npc.age}`)}
                         </Typography>
-                        {npc.modifiedAt && (
-                          <Typography color="textSecondary" component="p">
-                            <Edit className={classes.imageCardRowIcon} fontSize="inherit" />
-                            {format(new Date(npc.modifiedAt), 'yyyy-MM-dd k:mm')}
-                          </Typography>
-                        )}
-                        {/* AGE CULTURE RACE */}
+                      )}
+                      {npc.culture && (
                         <Typography color="textSecondary" component="p">
-                          <Publish className={classes.imageCardRowIcon} fontSize="inherit" />
-                          {npc.uploader.username}
+                          <SupervisedUserCircle className={classes.imageCardRowIcon} fontSize="inherit" />
+                          {t(`common.enums.culture.${npc.culture}`)}
                         </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions>
+                      )}
+                      <Divider className={classes.divider} />
+                      <Typography color="textSecondary" component="p">
+                        <Publish className={classes.imageCardRowIcon} fontSize="inherit" />
+                        {npc.uploader.username}
+                      </Typography>
+                      <Typography color="textSecondary" component="p">
+                        <Schedule className={classes.imageCardRowIcon} fontSize="inherit" />
+                        <Tooltip title={format(new Date(npc.createdAt), 'yyyy-MM-dd k:mm')}>
+                          <span>{formatDistance(new Date(npc.createdAt), Date.now(), { addSuffix: true, locale: hu })}</span>
+                        </Tooltip>
+                      </Typography>
+                      {npc.modifiedAt && (
+                        <Typography color="textSecondary" component="p">
+                          <Edit className={classes.imageCardRowIcon} fontSize="inherit" />
+                          <Tooltip title={format(new Date(npc.modifiedAt), 'yyyy-MM-dd k:mm')}>
+                            <span>{formatDistance(new Date(npc.modifiedAt), Date.now(), { addSuffix: true, locale: hu })}</span>
+                          </Tooltip>
+                        </Typography>
+                      )}
+                    </CardContent>
+                    <CardActions className={classes.imageCardButtonGroup}>
                       <Button size="small" color="primary">
-                        Share
-                      </Button>
-                      <Button size="small" color="primary">
-                        Learn More
+                        <NoteAdd className={classes.imageCardRowIcon} />
+                        {t('pages.imageList.addNoteButton')}
                       </Button>
                     </CardActions>
                   </Card>
@@ -163,6 +275,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
           )}
         </>
       )}
+      <AddImageDialog fullWidth maxWidth="xs" open={addImageDialogOpen} onClose={handleAddImageDialogClose} />
     </div>
   );
 };

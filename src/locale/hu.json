@@ -2,11 +2,19 @@
   "common": {
     "title": "NPC",
     "buttons": {
-      "login": "Bejelentkezés"
+      "login": "Bejelentkezés",
+      "save": "Mentés",
+      "cancel": "Mégse"
     },
     "labels": {
       "email": "Email",
-      "password": "Jelszó"
+      "password": "Jelszó",
+      "uploader": "Feltöltő",
+      "gender": "Nem",
+      "class": "Kaszt",
+      "age": "Korosztály",
+      "race": "Faj",
+      "culture": "Kultúrkör"
     },
     "enums": {
       "age": {
@@ -77,6 +85,21 @@
         "title": "Sikertelen kijelentkezés",
         "description": "További információ a konzolon"
       }
+    },
+    "imageList": {
+      "addNoteButton": "Jegyzet hozzáadása",
+      "emptyStateTitle": "Kép nem található",
+      "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
+      "emptyStateButton": "Kép hozzáadása"
+    }
+  },
+  "dialogs": {
+    "addImage": {
+      "title": "Kép hozzáadása",
+      "selectFileLabel": "Fájl kiválasztása",
+      "clearImageButton": "Kép törlése",
+      "selectLabel": "Nincs kiválasztás",
+      "allClassesSeelctedLabel": "Összes lehetőség kiválasztva"
     }
   }
 }
