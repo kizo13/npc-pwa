@@ -20,6 +20,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import Pagination from '@material-ui/lab/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Schedule from '@material-ui/icons/Schedule';
 import Wc from '@material-ui/icons/Wc';
@@ -30,6 +31,7 @@ import ChildCare from '@material-ui/icons/ChildCare';
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle';
 import LanguageIcon from '@material-ui/icons/Language';
 import NoteAdd from '@material-ui/icons/NoteAdd';
+import Delete from '@material-ui/icons/Delete';
 import ImageSearch from '@material-ui/icons/ImageSearch';
 import Clear from '@material-ui/icons/Clear';
 import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
@@ -37,6 +39,7 @@ import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
 import NpcFilter from '../../components/NpcFilter/NpcFilter';
 import EmptyState from '../../components/EmptyState';
 import AddImageDialog from '../../components/AddImageDialog';
+import ConfirmationDialog from '../../shared/components/ConfirmationDialog';
 
 import { useUserContext } from '../../contexts/userContext';
 import { FilterDto, useFilterContext, initialFilterState } from '../../contexts/filterContext';
@@ -69,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     verticalAlign: 'text-top',
   },
   imageCardButtonGroup: {
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   pagination: {
     paddingTop: theme.spacing(2),
@@ -89,18 +92,32 @@ const ListImages: React.FunctionComponent<{}> = () => {
   } = useFilterContext();
   const [npcs, setNpcs] = useState<NpcsPaginatedDto | null>(null);
   const [showPaginator, setShowPaginator] = useState<boolean>(false);
-  const [pending, setPending] = useState<boolean>(false);
+  const [fetchPending, setFetchPending] = useState<boolean>(false);
+  const [deletePending, setDeletePending] = useState<boolean>(false);
   const [pagination, setPagination] = useState<PaginationDto>({ page: 1, limit: 10 });
   const [addImageDialogOpen, setAddImageDialogOpen] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const fetchNpcs = useCallback((f: FilterDto, p: PaginationDto) => {
-    setPending(true);
+    setFetchPending(true);
     apiService.getNpcs(f, p).then((npcsList) => {
       setNpcs(npcsList);
       setShowPaginator(Math.ceil(npcsList.totalCount / npcsList.limit) > 1);
-      setPending(false);
+      setFetchPending(false);
     });
   }, []);
+
+  const deleteNpc = () => {
+    if (!deleteId) {
+      return;
+    }
+    setDeletePending(true);
+    apiService.deleteNpc(deleteId).then(() => {
+      fetchNpcs(filter, pagination);
+      setDeletePending(false);
+    });
+  };
 
   const handleAddImageDialogOpen = (): void => {
     setAddImageDialogOpen(true);
@@ -168,6 +185,11 @@ const ListImages: React.FunctionComponent<{}> = () => {
     setPagination({ ...pagination, page });
   };
 
+  const handleDeleteNpc = (npcId: number) => {
+    setDeleteId(npcId);
+    setConfirmDialogOpen(true);
+  };
+
   const emptyStateActions = useMemo(() => [
     {
       label: t('pages.imageList.emptyStateButton'),
@@ -181,8 +203,8 @@ const ListImages: React.FunctionComponent<{}> = () => {
   return (
     <div className={classes.root}>
       <NpcFilter onFilter={handleGetNpcs} />
-      {pending && 'Loading...'}
-      {!pending && (
+      {fetchPending && 'Loading...'}
+      {!fetchPending && (
         <>
           {(!npcs || npcs.totalCount === 0) && (
             <EmptyState
@@ -202,7 +224,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
               alignItems="flex-start"
             >
               {npcs.data.map((npc) => (
-                <Grid item xs={12} sm={6} md={3} key={npc.id}>
+                <Grid item xs={12} sm={6} md={4} lg={3} key={npc.id}>
                   <Card elevation={4}>
                     <CardMedia component="img" src={`data:image/png;base64,${npc.blob}`} />
                     <CardContent>
@@ -255,6 +277,11 @@ const ListImages: React.FunctionComponent<{}> = () => {
                       )}
                     </CardContent>
                     <CardActions className={classes.imageCardButtonGroup}>
+                      <Button size="small" color="secondary" onClick={() => handleDeleteNpc(npc.id)}>
+                        {deletePending && <CircularProgress color="secondary" size={16} className={classes.imageCardRowIcon} />}
+                        {!deletePending && <Delete className={classes.imageCardRowIcon} />}
+                        {t('pages.imageList.deleteButton')}
+                      </Button>
                       <Button size="small" color="primary">
                         <NoteAdd className={classes.imageCardRowIcon} />
                         {t('pages.imageList.addNoteButton')}
@@ -276,6 +303,14 @@ const ListImages: React.FunctionComponent<{}> = () => {
         </>
       )}
       <AddImageDialog fullWidth maxWidth="xs" open={addImageDialogOpen} onClose={handleAddImageDialogClose} />
+      <ConfirmationDialog
+        title={t('dialogs.deleteImage.title')}
+        open={confirmDialogOpen}
+        setOpen={setConfirmDialogOpen}
+        onConfirm={deleteNpc}
+      >
+        {t('dialogs.deleteImage.description')}
+      </ConfirmationDialog>
     </div>
   );
 };

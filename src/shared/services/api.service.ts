@@ -96,6 +96,9 @@ const api = {
       .then((res) => res.data);
   },
 
+  deleteNpc: (npcId: number): Promise<null> => protectedApi
+    .delete(`/npcs/${npcId}`),
+
   getAvailableClasses: (filter?: string): Promise<Array<string>> => protectedApi
     .get<Array<string>>('/npcs/classes', { params: { filter } })
     .then((res) => res.data),

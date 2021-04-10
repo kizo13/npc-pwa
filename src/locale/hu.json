@@ -4,7 +4,8 @@
     "buttons": {
       "login": "Bejelentkezés",
       "save": "Mentés",
-      "cancel": "Mégse"
+      "cancel": "Mégse",
+      "yes": "Igen"
     },
     "labels": {
       "email": "Email",
@@ -87,7 +88,8 @@
       }
     },
     "imageList": {
-      "addNoteButton": "Jegyzet hozzáadása",
+      "deleteButton": "Törlés",
+      "addNoteButton": "Új jegyzet",
       "emptyStateTitle": "Kép nem található",
       "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
       "emptyStateButton": "Kép hozzáadása"
@@ -100,6 +102,10 @@
       "clearImageButton": "Kép törlése",
       "selectLabel": "Nincs kiválasztás",
       "allClassesSeelctedLabel": "Összes lehetőség kiválasztva"
+    },
+    "deleteImage": {
+      "title":"Kép törlése",
+      "description": "Biztosan törölni akarod a képet?"
     }
   }
 }
