@@ -110,7 +110,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     if (onClose) {
       setForm(initialState);
       setPreview(undefined);
-      onClose({ reload: true }, 'escapeKeyDown');
+      onClose({ reload: pending }, 'escapeKeyDown');
     }
   };
 
@@ -118,8 +118,8 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     setPending(true);
     apiService.createNpc(form)
       .then(() => {
-        setPending(false);
         handleDialogClose();
+        setPending(false);
       })
       .catch((error: AxiosError) => {
         setPending(false);
@@ -135,8 +135,6 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     if (rest.open) {
       (async () => {
         const classList = await apiService.getAvailableClasses();
-        // const options: Array<OptionTypeBase> = classList.map((c) => ({ value: c, label: c }));
-        // if (active) setAvailableClasses(options);
         if (active) setAvailableClasses(classList);
       })();
     }
@@ -181,7 +179,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
             exclusive
             size="small"
             value={form.gender}
-            onChange={(e, v) => handleInputChange('gender', v)}
+            onChange={(_e, v) => handleInputChange('gender', v)}
             aria-label="Nem"
           >
             <ToggleButton className={classes.formGenderButton} value={GenderEnums.MALE} aria-label={GenderEnums.MALE}>

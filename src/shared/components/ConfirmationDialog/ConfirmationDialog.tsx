@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
+import Slide from '@material-ui/core/Slide';
+import { TransitionProps } from '@material-ui/core/transitions';
 import Button from '@material-ui/core/Button';
 import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useTranslation } from 'react-i18next';
+
+const SlideTransition = forwardRef((
+  props: TransitionProps & { children?: React.ReactElement },
+  ref: React.Ref<unknown>,
+) => <Slide direction="up" ref={ref} {...props} />);
 
 interface ConfirmationDialogProps extends DialogProps {
   children: React.ReactNode;
@@ -21,6 +28,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps): JSX.Element => {
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
+      TransitionComponent={SlideTransition}
       aria-labelledby="confirm-dialog"
     >
       <DialogTitle id="confirm-dialog">{title}</DialogTitle>
