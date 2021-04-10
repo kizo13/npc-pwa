@@ -48,6 +48,11 @@ import apiService from '../../shared/services/api.service';
 import { NpcsPaginatedDto } from '../../shared/dtos/api-responses.dto';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
 
+/**
+ * TODO:
+ * - update NPC
+ */
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: theme.spacing(2),
@@ -193,10 +198,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
   const emptyStateActions = useMemo(() => [
     {
       label: t('pages.imageList.emptyStateButton'),
-      func: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        event.preventDefault();
-        console.log('Empty state action clicked');
-      },
+      func: handleAddImageDialogOpen,
     },
   ], [t]);
 

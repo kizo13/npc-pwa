@@ -106,11 +106,11 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     setPreview(undefined);
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = (needsReload = false) => {
     if (onClose) {
       setForm(initialState);
       setPreview(undefined);
-      onClose({ reload: pending }, 'escapeKeyDown');
+      onClose({ reload: needsReload }, 'escapeKeyDown');
     }
   };
 
@@ -118,7 +118,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     setPending(true);
     apiService.createNpc(form)
       .then(() => {
-        handleDialogClose();
+        handleDialogClose(true);
         setPending(false);
       })
       .catch((error: AxiosError) => {
@@ -145,7 +145,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
   }, [rest.open]);
 
   return (
-    <NpcDialog {...rest} onClose={handleDialogClose}>
+    <NpcDialog {...rest} onClose={() => handleDialogClose()}>
       <DialogTitle id="alert-dialog-slide-title">{t('dialogs.addImage.title')}</DialogTitle>
       <DialogContent>
         <div className={classes.uploader}>
@@ -261,7 +261,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
         >
           {t('common.buttons.save')}
         </LoadingButton>
-        <Button variant="contained" onClick={handleDialogClose}>{t('common.buttons.cancel')}</Button>
+        <Button variant="contained" onClick={() => handleDialogClose()}>{t('common.buttons.cancel')}</Button>
       </DialogActions>
     </NpcDialog>
   );
