@@ -6,7 +6,7 @@ import {
 } from '../dtos/api-responses.dto';
 import { FilterDto } from '../../contexts/filterContext';
 import { PaginationDto } from '../dtos/pagination.dto';
-import { CreateNpcDto } from '../dtos/api-requests.dto';
+import { CreateNpcDto, UpdateNpcDto } from '../dtos/api-requests.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -63,7 +63,7 @@ const api = {
 
   getNpcs: (filter: FilterDto, pagination: PaginationDto): Promise<NpcsPaginatedDto> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const clearedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => v !== ''));
+    const clearedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => !!v));
     const query: PaginationDto = { ...pagination, filter: clearedFilter };
     const queryStr = qs.stringify(query);
     return protectedApi
@@ -95,6 +95,10 @@ const api = {
       .post('/npcs', formData)
       .then((res) => res.data);
   },
+
+  updateNpc: (npcId: number, data: UpdateNpcDto): Promise<NpcDto> => protectedApi
+    .put(`/npcs/${npcId}`, data)
+    .then((res) => res.data),
 
   deleteNpc: (npcId: number): Promise<null> => protectedApi
     .delete(`/npcs/${npcId}`),

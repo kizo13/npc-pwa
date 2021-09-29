@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import GenderEnums from '../shared/enums/gender.enum';
 
 export interface FilterDto {
-  gender: GenderEnums;
+  gender: GenderEnums | null;
   class: string;
   age: string;
   race: string;
@@ -18,7 +18,7 @@ interface FilterContextInitialStateDto {
 }
 
 export const initialFilterState: FilterDto = {
-  gender: GenderEnums.MALE,
+  gender: null,
   class: '',
   age: '',
   race: '',

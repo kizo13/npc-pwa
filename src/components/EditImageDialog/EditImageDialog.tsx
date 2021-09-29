@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
+import Pick from 'lodash-es/pick';
+import isEqual from 'lodash-es/isEqual';
 import { MultipleSelect } from 'react-select-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { DialogProps, Divider } from '@material-ui/core';
+import { DialogProps } from '@material-ui/core';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -23,7 +25,8 @@ import GenderEnums from '../../shared/enums/gender.enum';
 import RaceEnums from '../../shared/enums/race.enums';
 import CultureEnums from '../../shared/enums/culture.enums';
 import apiService from '../../shared/services/api.service';
-import { CreateNpcDto } from '../../shared/dtos/api-requests.dto';
+import { UpdateNpcDto } from '../../shared/dtos/api-requests.dto';
+import { NpcDto } from '../../shared/dtos/entities.dto';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -36,87 +39,56 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
     marginTop: theme.spacing(1),
   },
-  uploader: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: theme.spacing(1),
-  },
-  uploaderImage: {
-    width: '100%',
-    borderRadius: theme.spacing(0.5),
-  },
-  uploaderLabel: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    cursor: 'pointer',
-  },
-  uploadLabelText: {
-    width: '100%',
-    textAlign: 'center',
-    padding: '10px 0',
-    backgroundColor: 'rgba(0, 0, 0, 0.12)',
-  },
-  uploadLabelButton: {
-    marginLeft: '10px',
-  },
   formGenderButton: {
     flex: 1,
   },
 }));
 
-const initialState: CreateNpcDto = {
-  file: undefined,
+interface EditImageDialogProps {
+  npc: NpcDto;
+}
+
+const initialState: UpdateNpcDto = {
   gender: undefined,
-  class: [],
+  class: undefined,
   age: undefined,
   race: undefined,
   culture: undefined,
 };
 
-const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
+const EditImageDialog = ({ onClose, npc, ...rest }: DialogProps & EditImageDialogProps): JSX.Element => {
+  const npcValues = Pick(npc, 'gender', 'class', 'age', 'race', 'culture');
   const classes = useStyles();
   const { t } = useTranslation();
-  const [form, setForm] = useState(initialState);
-  const [preview, setPreview] = useState<string>();
+  const [form, setForm] = useState<UpdateNpcDto>({ ...npcValues });
+  const [updateValues, setUpdateValues] = useState<UpdateNpcDto>(initialState);
   const [pending, setPending] = useState(false);
   const [availableClasses, setAvailableClasses] = useState<Array<string>>([]);
 
-  const handleInputChange = (prop: string, value: unknown) => {
+  const handleInputChange = (prop: keyof UpdateNpcDto, value: unknown) => {
     setForm({ ...form, [prop]: value });
+    if (npc[prop] !== value) {
+      setUpdateValues({ ...updateValues, [prop]: value });
+    }
   };
 
   const handleClassChange = (value: string[]) => {
     setForm({ ...form, class: [...(value || [])] });
-  };
-
-  const handleFileChange = (filelist: FileList | null) => {
-    if (filelist && filelist.length > 0) {
-      setForm({ ...form, file: filelist[0] });
-      setPreview(URL.createObjectURL(filelist[0]));
+    if (!isEqual(npc.class, value)) {
+      setUpdateValues({ ...updateValues, class: [...(value || [])] });
     }
-  };
-
-  const handleClearImage = () => {
-    setForm({ ...form, file: undefined });
-    setPreview(undefined);
   };
 
   const handleDialogClose = (needsReload = false) => {
     if (onClose) {
       setForm(initialState);
-      setPreview(undefined);
       onClose({ reload: needsReload }, 'escapeKeyDown');
     }
   };
 
-  const handleAddImage = () => {
+  const handleUpdateImage = () => {
     setPending(true);
-    apiService.createNpc(form)
+    apiService.updateNpc(npc.id, form)
       .then(() => {
         handleDialogClose(true);
         setPending(false);
@@ -144,35 +116,11 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
     };
   }, [rest.open]);
 
+  console.log('form', form);
   return (
     <NpcDialog {...rest} onClose={() => handleDialogClose()}>
-      <DialogTitle id="alert-dialog-slide-title">{t('dialogs.addImage.title')}</DialogTitle>
+      <DialogTitle id="alert-dialog-slide-title">{t('dialogs.editImage.title')}</DialogTitle>
       <DialogContent>
-        <div className={classes.uploader}>
-          <label htmlFor="contained-button-file" className={classes.uploaderLabel}>
-            {preview && <img className={classes.uploaderImage} src={preview} alt="preview" />}
-            <input
-              style={{ display: 'none' }}
-              id="contained-button-file"
-              type="file"
-              name="file"
-              onChange={(e) => handleFileChange(e.target.files)}
-            />
-            {!form.file && (
-              <div className={classes.uploadLabelText}>{t('dialogs.addImage.selectFileLabel')}</div>
-            )}
-          </label>
-          {preview && (
-            <Button
-              variant="contained"
-              style={{ width: '100%' }}
-              onClick={handleClearImage}
-            >
-              {t('dialogs.addImage.clearImageButton')}
-            </Button>
-          )}
-        </div>
-        <Divider className={classes.divider} />
         <FormControl className={classes.formControl}>
           <ToggleButtonGroup
             id="npfilter-gender"
@@ -257,8 +205,8 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
           color="primary"
           variant="contained"
           disableElevation
-          onClick={handleAddImage}
-          disabled={!form.file}
+          onClick={handleUpdateImage}
+          // disabled={!form.file}
         >
           {t('common.buttons.save')}
         </LoadingButton>
@@ -268,4 +216,4 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
   );
 };
 
-export default AddImageDialog;
+export default EditImageDialog;

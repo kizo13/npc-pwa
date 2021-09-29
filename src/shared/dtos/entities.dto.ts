@@ -1,6 +1,7 @@
 import AgeEnums from '../enums/age.enum';
 import CultureEnums from '../enums/culture.enums';
 import GenderEnums from '../enums/gender.enum';
+import RaceEnums from '../enums/race.enums';
 
 export interface AvatarDto {
   id: number;
@@ -23,7 +24,7 @@ export interface NpcDto {
   gender: GenderEnums;
   class: string[];
   age: AgeEnums;
-  race: string;
+  race: RaceEnums;
   culture: CultureEnums;
   uploader: UserDto;
   createdAt: Date;

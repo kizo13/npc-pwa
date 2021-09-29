@@ -88,8 +88,6 @@
       }
     },
     "imageList": {
-      "deleteButton": "Törlés",
-      "addNoteButton": "Új jegyzet",
       "emptyStateTitle": "Kép nem található",
       "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
       "emptyStateButton": "Kép hozzáadása"
@@ -106,6 +104,9 @@
     "deleteImage": {
       "title":"Kép törlése",
       "description": "Biztosan törölni akarod a képet?"
+    },
+    "editImage": {
+      "title":"Képadatok szerkesztése"
     }
   }
 }

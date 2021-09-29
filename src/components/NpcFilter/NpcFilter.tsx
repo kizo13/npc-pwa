@@ -135,11 +135,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
   };
 
   const handleFilterChange = (prop: string, value: unknown) => {
-    let v = value;
-    if (prop === 'gender' && value === null) {
-      v = filter[prop];
-    }
-    setFilter({ ...filter, [prop]: v });
+    setFilter({ ...filter, [prop]: value });
   };
 
   const handleFilterClick = (e: React.MouseEvent) => {

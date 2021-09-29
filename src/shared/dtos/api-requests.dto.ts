@@ -11,3 +11,11 @@ export interface CreateNpcDto {
   race?: RaceEnums;
   culture?: CultureEnums;
 }
+
+export interface UpdateNpcDto {
+  gender?: GenderEnums;
+  class?: string[];
+  age?: AgeEnums;
+  race?: RaceEnums;
+  culture?: CultureEnums;
+}
