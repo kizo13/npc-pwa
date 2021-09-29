@@ -5,7 +5,8 @@
       "login": "Bejelentkezés",
       "save": "Mentés",
       "cancel": "Mégse",
-      "yes": "Igen"
+      "yes": "Igen",
+      "search": "Keresés"
     },
     "labels": {
       "email": "Email",
@@ -69,6 +70,7 @@
       "drawer": {
         "images": "Képek",
         "notes": "Jegyzetek",
+        "namegenerator": "Névgenerálás",
         "logout": "Kilépés"
       },
       "filter": {
@@ -91,6 +93,9 @@
       "emptyStateTitle": "Kép nem található",
       "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
       "emptyStateButton": "Kép hozzáadása"
+    },
+    "nameGenerator": {
+      "emptyStateTitle": "Nincsenek még nevek generálva"
     }
   },
   "dialogs": {

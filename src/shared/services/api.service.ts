@@ -6,7 +6,7 @@ import {
 } from '../dtos/api-responses.dto';
 import { FilterDto } from '../../contexts/filterContext';
 import { PaginationDto } from '../dtos/pagination.dto';
-import { CreateNpcDto, UpdateNpcDto } from '../dtos/api-requests.dto';
+import { CreateNpcDto, UpdateNpcDto, NameGeneratorFilter } from '../dtos/api-requests.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -105,6 +105,10 @@ const api = {
 
   getAvailableClasses: (filter?: string): Promise<Array<string>> => protectedApi
     .get<Array<string>>('/npcs/classes', { params: { filter } })
+    .then((res) => res.data),
+
+  getGeneratedNames: (filter: NameGeneratorFilter): Promise<Array<string>> => protectedApi
+    .get<Array<string>>('/names/generate-list', { params: { ...filter } })
     .then((res) => res.data),
 };
 

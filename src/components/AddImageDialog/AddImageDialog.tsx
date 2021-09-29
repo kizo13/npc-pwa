@@ -175,7 +175,7 @@ const AddImageDialog = ({ onClose, ...rest }: DialogProps): JSX.Element => {
         <Divider className={classes.divider} />
         <FormControl className={classes.formControl}>
           <ToggleButtonGroup
-            id="npfilter-gender"
+            id="npcfilter-gender"
             exclusive
             size="small"
             value={form.gender}

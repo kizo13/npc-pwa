@@ -19,6 +19,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import Description from '@material-ui/icons/Description';
+import FindReplace from '@material-ui/icons/FindReplace';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import MenuIcon from '@material-ui/icons/Menu';
 import Panorama from '@material-ui/icons/Panorama';
@@ -148,6 +149,18 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
           <ListItem button component={NavLink} to={ROUTES.notes} activeClassName="Mui-selected" exact onClick={handleLeftDrawerClose}>
             <ListItemIcon><Description /></ListItemIcon>
             <ListItemText primary={t('common.layout.drawer.notes')} />
+          </ListItem>
+          <Divider />
+          <ListItem
+            button
+            component={NavLink}
+            to={ROUTES.namegenerator}
+            activeClassName="Mui-selected"
+            exact
+            onClick={handleLeftDrawerClose}
+          >
+            <ListItemIcon><FindReplace /></ListItemIcon>
+            <ListItemText primary={t('common.layout.drawer.namegenerator')} />
           </ListItem>
           <Divider />
           <ListItem button onClick={handleLogout}>

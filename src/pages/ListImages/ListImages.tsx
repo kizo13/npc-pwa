@@ -36,7 +36,7 @@ import ImageSearch from '@material-ui/icons/ImageSearch';
 import Clear from '@material-ui/icons/Clear';
 import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
 
-import NpcFilter from '../../components/NpcFilter/NpcFilter';
+import NpcFilter from '../../components/NpcFilter';
 import EmptyState from '../../components/EmptyState';
 import AddImageDialog from '../../components/AddImageDialog';
 import ConfirmationDialog from '../../shared/components/ConfirmationDialog';
@@ -49,11 +49,6 @@ import { NpcsPaginatedDto } from '../../shared/dtos/api-responses.dto';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
 import { NpcDto } from '../../shared/dtos/entities.dto';
 import EditImageDialog from '../../components/EditImageDialog';
-
-/**
- * TODO:
- * - update NPC
- */
 
 const useStyles = makeStyles((theme) => ({
   root: {

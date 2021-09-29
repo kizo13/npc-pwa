@@ -184,7 +184,7 @@ const NpcFilter = ({ onFilter }: NpcFilterProps): JSX.Element => {
           {/* GENDER */}
           <FormControl className={classes.filterFormControl}>
             <ToggleButtonGroup
-              id="npfilter-gender"
+              id="npcfilter-gender"
               exclusive
               size="small"
               value={filter.gender}

@@ -4,6 +4,7 @@ export const DEFAULT_AVATAR_SRC = '/9j/4AAQSkZJRgABAQEAYABgAAD//gA7Q1JFQVRPUjogZ
 export const ROUTES = {
   images: '/',
   notes: '/notes',
+  namegenerator: '/namegenerator',
   login: '/login',
 };
 

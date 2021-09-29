@@ -19,3 +19,8 @@ export interface UpdateNpcDto {
   race?: RaceEnums;
   culture?: CultureEnums;
 }
+
+export interface NameGeneratorFilter {
+  gender: GenderEnums;
+  culture: CultureEnums;
+}

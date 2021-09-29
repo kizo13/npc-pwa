@@ -123,7 +123,7 @@ const EditImageDialog = ({ onClose, npc, ...rest }: DialogProps & EditImageDialo
       <DialogContent>
         <FormControl className={classes.formControl}>
           <ToggleButtonGroup
-            id="npfilter-gender"
+            id="npcfilter-gender"
             exclusive
             size="small"
             value={form.gender}
