@@ -56,9 +56,9 @@
     "eslint-plugin-react-hooks": "^1.7.0"
   },
   "scripts": {
-    "start": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts start",
-    "build": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
-    "test": "react-scripts test",
+    "start": "DISABLE_ESLINT_PLUGIN=true REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts start",
+    "build": "DISABLE_ESLINT_PLUGIN=true REACT_APP_GIT_SHA=`git rev-parse --short HEAD` react-scripts build",
+    "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint src/**/*.ts{,x}"
   },
