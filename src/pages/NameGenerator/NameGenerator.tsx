@@ -52,6 +52,9 @@ const useStyles = makeStyles((theme) => ({
     columnCount: 3,
     columnGap: theme.spacing(3),
   },
+  names: {
+    padding: `${theme.spacing(2)}px 0`,
+  },
   emptyStateTitle: {
     color: grey[700],
     textAlign: 'center',
@@ -76,7 +79,6 @@ const NameGenerator: React.FunctionComponent<{}> = () => {
 
   const handleNameGenerate = () => {
     setPending(true);
-    setNames([]);
     apiService.getGeneratedNames(filter)
       .then((generatedNames: string[]) => {
         setPending(false);
@@ -147,7 +149,7 @@ const NameGenerator: React.FunctionComponent<{}> = () => {
             )}
             {!!names.length && (
               <CardContent className={classes.nameContent}>
-                {names.map((name, i) => <div key={JSON.stringify({ key: i, name })}>{name}</div>)}
+                {names.map((name, i) => <div key={JSON.stringify({ key: i, name })} className={classes.names}>{name}</div>)}
               </CardContent>
             )}
           </Card>

@@ -47,6 +47,7 @@ function App(): JSX.Element {
         setUser({ ...refreshData, access_token: accessToken } as LoginResponseDto);
         setLoading(false);
       })
+      .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
 
