@@ -2,12 +2,13 @@ import React from 'react';
 import { ButtonProps } from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
+import blue from '@material-ui/core/colors/blue';
 import Button from '../Button';
 
 const useStyles = makeStyles((theme) => ({
   spinner: {
     marginRight: theme.spacing(1),
-    color: '#286655',
+    color: blue[50],
   },
 }));
 
