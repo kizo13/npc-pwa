@@ -29,4 +29,16 @@ export interface NpcDto {
   uploader: UserDto;
   createdAt: Date;
   modifiedAt: Date;
+  noteCount: number;
+}
+
+export interface NoteDto {
+  id: number;
+  npc: NpcDto;
+  name: string;
+  description: string;
+  createdBy: UserDto;
+  modifiedBy: UserDto;
+  createdAt: Date;
+  modifiedAt: Date;
 }

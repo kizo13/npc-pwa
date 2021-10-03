@@ -1,12 +1,14 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { NpcDto, UserDto } from '../dtos/entities.dto';
+import { NoteDto, NpcDto, UserDto } from '../dtos/entities.dto';
 import {
   LoginResponseDto, NpcsPaginatedDto, TokenResponseDto,
 } from '../dtos/api-responses.dto';
 import { FilterDto } from '../../contexts/filterContext';
 import { PaginationDto } from '../dtos/pagination.dto';
-import { CreateNpcDto, UpdateNpcDto, NameGeneratorFilter } from '../dtos/api-requests.dto';
+import {
+  CreateNpcDto, UpdateNpcDto, NameGeneratorFilter, CreateNoteDto, NameListGeneratorFilter,
+} from '../dtos/api-requests.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -107,8 +109,16 @@ const api = {
     .get<Array<string>>('/npcs/classes', { params: { filter } })
     .then((res) => res.data),
 
-  getGeneratedNames: (filter: NameGeneratorFilter): Promise<Array<string>> => protectedApi
+  getGeneratedNames: (filter: NameListGeneratorFilter): Promise<Array<string>> => protectedApi
     .get<Array<string>>('/names/generate-list', { params: { ...filter } })
+    .then((res) => res.data),
+
+  getGeneratedName: (filter: NameGeneratorFilter): Promise<string> => protectedApi
+    .get<string>('/names/generate', { params: { ...filter } })
+    .then((res) => res.data),
+
+  createNote: (note: CreateNoteDto): Promise<NoteDto> => protectedApi
+    .post('/notes', note)
     .then((res) => res.data),
 };
 

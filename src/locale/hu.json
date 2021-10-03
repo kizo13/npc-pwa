@@ -92,7 +92,8 @@
     "imageList": {
       "emptyStateTitle": "Kép nem található",
       "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
-      "emptyStateButton": "Kép hozzáadása"
+      "emptyStateButton": "Kép hozzáadása",
+      "tooltipNoteReferenced": "{{count}} jegyzethez felhasználva"
     },
     "nameGenerator": {
       "emptyStateTitle": "Nincsenek még nevek generálva"
@@ -108,10 +109,17 @@
     },
     "deleteImage": {
       "title":"Kép törlése",
-      "description": "Biztosan törölni akarod a képet?"
+      "description_zero": "Biztosan törölni akarod a képet?",
+      "description_other": "A kép törlésével a képhez tartozó {{count}} jegyzet is törlésre kerül.\n\nBiztosan törölni akarod a képet?"
     },
     "editImage": {
       "title":"Képadatok szerkesztése"
+    },
+    "addNote": {
+      "title":"Jegyzet hozzáadása",
+      "nameLabel": "Név",
+      "descriptionLabel": "Jegyzet",
+      "isPrivateLabel": "Privát"
     }
   }
 }

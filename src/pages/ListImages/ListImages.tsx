@@ -35,6 +35,7 @@ import Delete from '@material-ui/icons/Delete';
 import ImageSearch from '@material-ui/icons/ImageSearch';
 import Clear from '@material-ui/icons/Clear';
 import AddPhotoAlternate from '@material-ui/icons/AddPhotoAlternate';
+import FolderSpecial from '@material-ui/icons/FolderSpecial';
 
 import NpcFilter from '../../components/NpcFilter';
 import EmptyState from '../../components/EmptyState';
@@ -49,6 +50,7 @@ import { NpcsPaginatedDto } from '../../shared/dtos/api-responses.dto';
 import { PaginationDto } from '../../shared/dtos/pagination.dto';
 import { NpcDto } from '../../shared/dtos/entities.dto';
 import EditImageDialog from '../../components/EditImageDialog';
+import AddNoteDialog from '../../components/AddNoteDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,8 +105,10 @@ const ListImages: React.FunctionComponent<{}> = () => {
   const [addImageDialogOpen, setAddImageDialogOpen] = useState(false);
   const [editImageDialogOpen, setEditImageDialogOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [addNoteDialogOpen, setAddNoteDialogOpen] = useState(false);
+  const [deleteNpc, setDeleteNpc] = useState<NpcDto | null>(null);
   const [editNpc, setEditNpc] = useState<NpcDto | null>(null);
+  const [addNoteNpc, setAddNoteNpc] = useState<NpcDto | null>(null);
 
   const fetchNpcs = useCallback((f: FilterDto, p: PaginationDto) => {
     setFetchPending(true);
@@ -115,12 +119,12 @@ const ListImages: React.FunctionComponent<{}> = () => {
     });
   }, []);
 
-  const deleteNpc = () => {
-    if (!deleteId) {
+  const deleteNpcRemote = () => {
+    if (!deleteNpc) {
       return;
     }
     setDeletePending(true);
-    apiService.deleteNpc(deleteId).then(() => {
+    apiService.deleteNpc(deleteNpc.id).then(() => {
       fetchNpcs(filter, pagination);
       setDeletePending(false);
     });
@@ -143,6 +147,11 @@ const ListImages: React.FunctionComponent<{}> = () => {
     if (event.reload) {
       fetchNpcs(filter, pagination);
     }
+  };
+
+  const handleAddNoteDialogClose = (): void => {
+    setAddNoteDialogOpen(false);
+    setAddNoteNpc(null);
   };
 
   const handleRightDrawerOpen = useCallback((): void => {
@@ -205,9 +214,14 @@ const ListImages: React.FunctionComponent<{}> = () => {
     setEditImageDialogOpen(true);
   };
 
-  const handleDeleteNpc = (npcId: number) => {
-    setDeleteId(npcId);
+  const handleDeleteNpc = (npc: NpcDto) => {
+    setDeleteNpc(npc);
     setConfirmDialogOpen(true);
+  };
+
+  const handleAddNote = (npc: NpcDto) => {
+    setAddNoteNpc(npc);
+    setAddNoteDialogOpen(true);
   };
 
   const emptyStateActions = useMemo(() => [
@@ -292,6 +306,15 @@ const ListImages: React.FunctionComponent<{}> = () => {
                           </Tooltip>
                         </Typography>
                       )}
+                      <Divider className={classes.divider} />
+                      {npc.noteCount > 0 && (
+                        <Typography color="textSecondary" component="p">
+                          <FolderSpecial className={classes.imageCardRowIcon} fontSize="inherit" />
+                          <Tooltip title={t('pages.imageList.tooltipNoteReferenced', { count: npc.noteCount }) || ''}>
+                            <span>{npc.noteCount}</span>
+                          </Tooltip>
+                        </Typography>
+                      )}
                     </CardContent>
                     <CardActions className={classes.imageCardButtonGroup}>
                       <div>
@@ -308,15 +331,21 @@ const ListImages: React.FunctionComponent<{}> = () => {
                           size="small"
                           color="secondary"
                           className={classes.imageCardButton}
-                          onClick={() => handleDeleteNpc(npc.id)}
+                          onClick={() => handleDeleteNpc(npc)}
                         >
                           {deletePending && <CircularProgress color="secondary" />}
                           {!deletePending && <Delete />}
                         </IconButton>
                       </div>
                       <div>
-                        <IconButton size="small" color="primary" className={classes.imageCardButton}>
-                          <NoteAdd />
+                        <IconButton
+                          size="small"
+                          color="primary"
+                          className={classes.imageCardButton}
+                          onClick={() => handleAddNote(npc)}
+                        >
+                          {deletePending && <CircularProgress color="secondary" />}
+                          {!deletePending && <NoteAdd />}
                         </IconButton>
                       </div>
                     </CardActions>
@@ -339,14 +368,21 @@ const ListImages: React.FunctionComponent<{}> = () => {
       {editNpc && (
         <EditImageDialog fullWidth maxWidth="xs" npc={editNpc as NpcDto} open={editImageDialogOpen} onClose={handleEditImageDialogClose} />
       )}
-      <ConfirmationDialog
-        title={t('dialogs.deleteImage.title')}
-        open={confirmDialogOpen}
-        setOpen={setConfirmDialogOpen}
-        onConfirm={deleteNpc}
-      >
-        {t('dialogs.deleteImage.description')}
-      </ConfirmationDialog>
+      {deleteNpc && (
+        <ConfirmationDialog
+          title={t('dialogs.deleteImage.title')}
+          open={confirmDialogOpen}
+          setOpen={setConfirmDialogOpen}
+          onConfirm={deleteNpcRemote}
+        >
+          {deleteNpc.noteCount === 0
+            ? t('dialogs.deleteImage.description_zero')
+            : t('dialogs.deleteImage.description_other', { count: deleteNpc.noteCount })}
+        </ConfirmationDialog>
+      )}
+      {addNoteNpc && (
+        <AddNoteDialog fullWidth maxWidth="xs" npc={addNoteNpc as NpcDto} open={addNoteDialogOpen} onClose={handleAddNoteDialogClose} />
+      )}
     </div>
   );
 };
