@@ -169,7 +169,8 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
           </ListItem>
           <div className={classes.footer}>
             <Typography className={classes.footerVersion}>
-              {`v${version}-${process.env.REACT_APP_GIT_SHA}`}
+              {`v${version}`}
+              {process.env.REACT_APP_GIT_SHA && `-${process.env.REACT_APP_GIT_SHA}`}
             </Typography>
           </div>
         </List>
