@@ -268,7 +268,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
                   <Card elevation={4}>
                     <CardMedia component="img" src={`data:image/png;base64,${npc.blob}`} />
                     <CardContent>
-                      {npc.class?.length !== 0 && (
+                      {!!npc.class?.length && (
                         npc.class.map((c) => (
                           <Chip key={`${npc.id}-${c}`} className={classes.chip} label={c} />
                         ))
