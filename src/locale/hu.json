@@ -6,7 +6,8 @@
       "save": "Mentés",
       "cancel": "Mégse",
       "yes": "Igen",
-      "search": "Keresés"
+      "search": "Keresés",
+      "share": "Megosztás"
     },
     "labels": {
       "email": "Email",
@@ -101,7 +102,10 @@
       "emptyStateTitle": "Jegyzet nem található",
       "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
       "emptyStateButton": "Átnavigálás a képekhez",
-      "privateLabel": "Privát"
+      "privateLabel": "Privát",
+      "shareFailedMessage": "Nem támogatott megosztási funkció",
+      "shareUrlCopiedToClipboard": "Az URL a vágólapra másolva",
+      "shareError": "Megosztási hiba: {{error}}"
     },
     "nameGenerator": {
       "emptyStateTitle": "Nincsenek még nevek generálva"

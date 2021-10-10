@@ -29,6 +29,7 @@ import Schedule from '@material-ui/icons/Schedule';
 import Edit from '@material-ui/icons/Edit';
 import ImageSearch from '@material-ui/icons/ImageSearch';
 import Clear from '@material-ui/icons/Clear';
+import Share from '@material-ui/icons/Share';
 
 import EmptyState from '../../components/EmptyState';
 import ConfirmationDialog from '../../shared/components/ConfirmationDialog';
@@ -43,6 +44,7 @@ import {
 } from '../../contexts/filterContext';
 import { ToolbarAction, useToolbarContext } from '../../contexts/toolbarContext';
 import NoteFilter from '../../components/NoteFilter';
+import ShareButton from '../../components/ShareButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -270,17 +272,16 @@ const ListNotes: React.FunctionComponent<{}> = () => {
                           {!deletePending && <Delete />}
                         </IconButton>
                       </div>
-                      {/* <div>
-                        <IconButton
-                          size="small"
+                      <div>
+                        <ShareButton
                           color="primary"
-                          className={classes.imageCardButton}
-                          onClick={() => handleAddNote(note)}
+                          size="small"
+                          text="share text"
+                          url={`${window.location.protocol}//${window.location.host}/preview/${note.hash}`}
                         >
-                          {deletePending && <CircularProgress color="secondary" />}
-                          {!deletePending && <NoteAdd />}
-                        </IconButton>
-                      </div> */}
+                          <Share />
+                        </ShareButton>
+                      </div>
                     </CardActions>
                   </Card>
                 </Grid>
