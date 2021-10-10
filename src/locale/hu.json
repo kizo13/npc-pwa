@@ -133,6 +133,9 @@
       "descriptionLabel": "Jegyzet",
       "isPrivateLabel": "Privát"
     },
+    "editNote": {
+      "title":"Jegyzet szerkesztése"
+    },
     "deleteNote": {
       "title":"Jegyzet törlése",
       "description": "Biztosan törölni akarod a jegyzetet?"

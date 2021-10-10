@@ -125,6 +125,7 @@ const ListImages: React.FunctionComponent<{}> = () => {
     }
     setDeletePending(true);
     apiService.deleteNpc(deleteNpc.id).then(() => {
+      // TODO: add snackbar
       fetchNpcs(filter, pagination);
       setDeletePending(false);
     });
@@ -145,13 +146,17 @@ const ListImages: React.FunctionComponent<{}> = () => {
     setEditImageDialogOpen(false);
     setEditNpc(null);
     if (event.reload) {
+      // TODO: add snackbar
       fetchNpcs(filter, pagination);
     }
   };
 
-  const handleAddNoteDialogClose = (): void => {
+  const handleAddNoteDialogClose = (event: { reload?: boolean }): void => {
     setAddNoteDialogOpen(false);
     setAddNoteNpc(null);
+    if (event.reload) {
+      // TODO: add snackbar
+    }
   };
 
   const handleRightDrawerOpen = useCallback((): void => {

@@ -5,7 +5,7 @@ import { LoginResponseDto, TokenResponseDto } from '../dtos/api-responses.dto';
 import { NoteFilterDto, NpcFilterDto } from '../../contexts/filterContext';
 import { PaginationDto, PaginatedDto } from '../dtos/pagination.dto';
 import {
-  CreateNpcDto, UpdateNpcDto, NameGeneratorFilter, CreateNoteDto, NameListGeneratorFilter,
+  CreateNpcDto, UpdateNpcDto, NameGeneratorFilter, CreateNoteDto, NameListGeneratorFilter, UpdateNoteDto,
 } from '../dtos/api-requests.dto';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -131,6 +131,10 @@ const api = {
 
   createNote: (note: CreateNoteDto): Promise<NoteDto> => protectedApi
     .post('/notes', note)
+    .then((res) => res.data),
+
+  updateNote: (noteId: number, data: UpdateNoteDto): Promise<NoteDto> => protectedApi
+    .put(`/notes/${noteId}`, data)
     .then((res) => res.data),
 
   deleteNote: (noteId: number): Promise<null> => protectedApi
