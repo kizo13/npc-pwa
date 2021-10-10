@@ -16,7 +16,9 @@
       "class": "Kaszt",
       "age": "Korosztály",
       "race": "Faj",
-      "culture": "Kultúrkör"
+      "culture": "Kultúrkör",
+      "name": "Név",
+      "description": "Jegyzet"
     },
     "enums": {
       "age": {
@@ -95,6 +97,12 @@
       "emptyStateButton": "Kép hozzáadása",
       "tooltipNoteReferenced": "{{count}} jegyzethez felhasználva"
     },
+    "noteList": {
+      "emptyStateTitle": "Jegyzet nem található",
+      "emptyStateSubtitle": "Kattints a gombra egy kép hozzáadásához",
+      "emptyStateButton": "Átnavigálás a képekhez",
+      "privateLabel": "Privát"
+    },
     "nameGenerator": {
       "emptyStateTitle": "Nincsenek még nevek generálva"
     }
@@ -120,6 +128,10 @@
       "nameLabel": "Név",
       "descriptionLabel": "Jegyzet",
       "isPrivateLabel": "Privát"
+    },
+    "deleteNote": {
+      "title":"Jegyzet törlése",
+      "description": "Biztosan törölni akarod a jegyzetet?"
     }
   }
 }

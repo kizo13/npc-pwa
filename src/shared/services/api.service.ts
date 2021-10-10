@@ -1,11 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 import { NoteDto, NpcDto, UserDto } from '../dtos/entities.dto';
-import {
-  LoginResponseDto, NpcsPaginatedDto, TokenResponseDto,
-} from '../dtos/api-responses.dto';
-import { FilterDto } from '../../contexts/filterContext';
-import { PaginationDto } from '../dtos/pagination.dto';
+import { LoginResponseDto, TokenResponseDto } from '../dtos/api-responses.dto';
+import { NoteFilterDto, NpcFilterDto } from '../../contexts/filterContext';
+import { PaginationDto, PaginatedDto } from '../dtos/pagination.dto';
 import {
   CreateNpcDto, UpdateNpcDto, NameGeneratorFilter, CreateNoteDto, NameListGeneratorFilter,
 } from '../dtos/api-requests.dto';
@@ -63,13 +61,13 @@ const api = {
     .get<Array<UserDto>>('/users')
     .then((res) => res.data),
 
-  getNpcs: (filter: FilterDto, pagination: PaginationDto): Promise<NpcsPaginatedDto> => {
+  getNpcs: (filter: NpcFilterDto, pagination: PaginationDto): Promise<PaginatedDto<NpcDto>> => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const clearedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => !!v));
     const query: PaginationDto = { ...pagination, filter: clearedFilter };
     const queryStr = qs.stringify(query);
     return protectedApi
-      .get<NpcsPaginatedDto>(`/npcs${queryStr ? `?${queryStr}` : ''}`)
+      .get<PaginatedDto<NpcDto>>(`/npcs${queryStr ? `?${queryStr}` : ''}`)
       .then((res) => res.data);
   },
 
@@ -117,9 +115,26 @@ const api = {
     .get<string>('/names/generate', { params: { ...filter } })
     .then((res) => res.data),
 
+  getNotes: (filter: NoteFilterDto, pagination: PaginationDto): Promise<PaginatedDto<NoteDto>> => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const clearedFilter = Object.fromEntries(Object.entries(filter).filter(([_, v]) => !!v));
+    if (clearedFilter.uploaderId) {
+      clearedFilter.createdById = clearedFilter.uploaderId;
+      delete clearedFilter.uploaderId;
+    }
+    const query: PaginationDto = { ...pagination, filter: clearedFilter };
+    const queryStr = qs.stringify(query);
+    return protectedApi
+      .get<PaginatedDto<NoteDto>>(`/notes${queryStr ? `?${queryStr}` : ''}`)
+      .then((res) => res.data);
+  },
+
   createNote: (note: CreateNoteDto): Promise<NoteDto> => protectedApi
     .post('/notes', note)
     .then((res) => res.data),
+
+  deleteNote: (noteId: number): Promise<null> => protectedApi
+    .delete(`/notes/${noteId}`),
 };
 
 protectedApi.interceptors.request.use((config) => {

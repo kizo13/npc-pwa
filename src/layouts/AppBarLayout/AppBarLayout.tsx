@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -64,11 +64,17 @@ const useStyles = makeStyles((theme) => ({
 
 const AppBar: React.FunctionComponent<{}> = ({ children }) => {
   const { t } = useTranslation();
+  const location = useLocation();
   const classes = useStyles();
   const { user, setUser } = useUserContext();
   const { actions } = useToolbarContext();
   const [leftOpen, setLeftOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const localtionLabel: string = useMemo(() => {
+    const label = location.pathname.substring(1);
+    return t(!label ? 'common.layout.drawer.images' : `common.layout.drawer.${label}`);
+  }, [location, t]);
 
   const handleLeftDrawerOpen = (): void => {
     setLeftOpen(true);
@@ -99,6 +105,7 @@ const AppBar: React.FunctionComponent<{}> = ({ children }) => {
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             {t('common.title')}
+            {` - ${localtionLabel}`}
           </Typography>
           {actions.map(({
             label, onClick, icon: Icon, className, isVisible,

@@ -36,3 +36,19 @@ export interface CreateNoteDto {
   name: string;
   isPrivate: boolean;
 }
+
+export interface NoteFilter {
+  gender?: GenderEnums;
+  class?: string[];
+  age?: AgeEnums;
+  race?: RaceEnums;
+  culture?: CultureEnums;
+  createdById?: number;
+  name?: string;
+  description?: string;
+}
+
+export interface UpdateNoteDto {
+  description: string;
+  isPrivate: boolean;
+}

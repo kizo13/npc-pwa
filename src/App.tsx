@@ -8,7 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AppBar from './layouts/AppBarLayout';
 import Login from './pages/Login';
 import ListImages from './pages/ListImages';
-import ListNpcs from './pages/ListNpcs';
+import ListNotes from './pages/ListNotes';
 import NameGenerator from './pages/NameGenerator';
 import { ROUTES } from './shared/constants';
 import apiService from './shared/services/api.service';
@@ -66,7 +66,7 @@ function App(): JSX.Element {
                   <ToolbarContext.Provider value={{ actions, setActions }}>
                     <Switch>
                       <ProtectedRoute exact path={ROUTES.images} component={ListImages} layout={AppBar} />
-                      <ProtectedRoute exact path={ROUTES.notes} component={ListNpcs} layout={AppBar} />
+                      <ProtectedRoute exact path={ROUTES.notes} component={ListNotes} layout={AppBar} />
                       <ProtectedRoute exact path={ROUTES.namegenerator} component={NameGenerator} layout={AppBar} />
                       <PublicRoute exact path={ROUTES.login} component={Login} />
                     </Switch>

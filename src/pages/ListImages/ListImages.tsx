@@ -41,16 +41,16 @@ import NpcFilter from '../../components/NpcFilter';
 import EmptyState from '../../components/EmptyState';
 import AddImageDialog from '../../components/AddImageDialog';
 import ConfirmationDialog from '../../shared/components/ConfirmationDialog';
+import EditImageDialog from '../../components/EditImageDialog';
+import AddNoteDialog from '../../components/AddNoteDialog';
 
 import { useUserContext } from '../../contexts/userContext';
 import { FilterDto, useFilterContext, initialFilterState } from '../../contexts/filterContext';
 import { ToolbarAction, useToolbarContext } from '../../contexts/toolbarContext';
 import apiService from '../../shared/services/api.service';
-import { NpcsPaginatedDto } from '../../shared/dtos/api-responses.dto';
-import { PaginationDto } from '../../shared/dtos/pagination.dto';
+import { PaginatedDto, PaginationDto } from '../../shared/dtos/pagination.dto';
 import { NpcDto } from '../../shared/dtos/entities.dto';
-import EditImageDialog from '../../components/EditImageDialog';
-import AddNoteDialog from '../../components/AddNoteDialog';
+import { LIMIT_TO_PAGE } from '../../shared/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -97,11 +97,11 @@ const ListImages: React.FunctionComponent<{}> = () => {
   const {
     filter, setFilter, open, setOpen,
   } = useFilterContext();
-  const [npcs, setNpcs] = useState<NpcsPaginatedDto | null>(null);
+  const [npcs, setNpcs] = useState<PaginatedDto<NpcDto> | null>(null);
   const [showPaginator, setShowPaginator] = useState<boolean>(false);
   const [fetchPending, setFetchPending] = useState<boolean>(false);
   const [deletePending, setDeletePending] = useState<boolean>(false);
-  const [pagination, setPagination] = useState<PaginationDto>({ page: 1, limit: 10 });
+  const [pagination, setPagination] = useState<PaginationDto>({ page: 1, limit: LIMIT_TO_PAGE });
   const [addImageDialogOpen, setAddImageDialogOpen] = useState(false);
   const [editImageDialogOpen, setEditImageDialogOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -183,6 +183,10 @@ const ListImages: React.FunctionComponent<{}> = () => {
       icon: ImageSearch,
     },
   ], [classes.clearButton, handleClearFilters, handleRightDrawerOpen, isFilterSet]);
+
+  useEffect(() => {
+    handleClearFilters();
+  }, [handleClearFilters]);
 
   useEffect(() => {
     const actionList: Array<ToolbarAction> = setActionButtons;

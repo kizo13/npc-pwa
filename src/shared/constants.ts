@@ -8,7 +8,10 @@ export const ROUTES = {
   login: '/login',
 };
 
+export const LIMIT_TO_PAGE = 12;
+
 export default {
   DEFAULT_AVATAR_SRC,
   ROUTES,
+  LIMIT_TO_PAGE,
 };

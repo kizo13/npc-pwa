@@ -41,4 +41,6 @@ export interface NoteDto {
   modifiedBy: UserDto;
   createdAt: Date;
   modifiedAt: Date;
+  isPrivate: boolean;
+  hash: string;
 }

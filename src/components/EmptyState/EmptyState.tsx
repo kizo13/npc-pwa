@@ -7,7 +7,6 @@ import grey from '@material-ui/core/colors/grey';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',

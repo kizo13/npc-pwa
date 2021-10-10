@@ -7,3 +7,10 @@ export interface PaginationDto {
   order?: string;
   filter?: Partial<FilterDto>;
 }
+
+export interface PaginatedDto<T> {
+  data: T[];
+  page: number;
+  limit: number;
+  totalCount: number;
+}

@@ -8,7 +8,12 @@ export interface FilterDto {
   race: string;
   culture: string;
   uploaderId: number | '';
+  description: string;
+  name: string;
 }
+
+export type NpcFilterDto = Pick<FilterDto, 'gender' | 'class' | 'age' | 'race' | 'culture' | 'uploaderId'>;
+export type NoteFilterDto = FilterDto;
 
 interface FilterContextInitialStateDto {
   filter: FilterDto;
@@ -24,6 +29,8 @@ export const initialFilterState: FilterDto = {
   race: '',
   culture: '',
   uploaderId: '',
+  name: '',
+  description: '',
 };
 
 export const FilterContext = createContext<FilterContextInitialStateDto>({
