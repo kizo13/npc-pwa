@@ -34,40 +34,12 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
     width: '100%',
   },
-  divider: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
-  },
   uploader: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: theme.spacing(1),
-  },
-  uploaderImage: {
-    width: '100%',
-    borderRadius: theme.spacing(0.5),
-  },
-  uploaderLabel: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    cursor: 'pointer',
-  },
-  uploadLabelText: {
-    width: '100%',
-    textAlign: 'center',
-    padding: '10px 0',
-    backgroundColor: 'rgba(0, 0, 0, 0.12)',
-  },
-  uploadLabelButton: {
-    marginLeft: '10px',
-  },
-  formGenderButton: {
-    flex: 1,
   },
 }));
 
@@ -123,7 +95,6 @@ const AddNoteDialog = ({ onClose, npc, ...rest }: DialogProps & AddNoteDialogPro
     setPending(true);
     apiService.createNote(form)
       .then(() => {
-        // TODO: add snackbar
         handleDialogClose(true);
         setPending(false);
       })
@@ -144,7 +115,6 @@ const AddNoteDialog = ({ onClose, npc, ...rest }: DialogProps & AddNoteDialogPro
         </Card>
         <FormControl className={classes.formControl}>
           <TextField
-            // className={classes.input}
             variant="standard"
             size="small"
             id="name"
@@ -170,7 +140,6 @@ const AddNoteDialog = ({ onClose, npc, ...rest }: DialogProps & AddNoteDialogPro
         </FormControl>
         <FormControl className={classes.formControl}>
           <TextField
-            // className={classes.input}
             variant="standard"
             size="small"
             id="description"

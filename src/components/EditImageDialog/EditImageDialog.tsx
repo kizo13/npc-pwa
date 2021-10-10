@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AxiosError } from 'axios';
 import Pick from 'lodash-es/pick';
-import isEqual from 'lodash-es/isEqual';
 import { MultipleSelect } from 'react-select-material-ui';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -35,10 +34,6 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
     width: '100%',
   },
-  divider: {
-    marginBottom: theme.spacing(1),
-    marginTop: theme.spacing(1),
-  },
   formGenderButton: {
     flex: 1,
   },
@@ -61,22 +56,15 @@ const EditImageDialog = ({ onClose, npc, ...rest }: DialogProps & EditImageDialo
   const classes = useStyles();
   const { t } = useTranslation();
   const [form, setForm] = useState<UpdateNpcDto>({ ...npcValues });
-  const [updateValues, setUpdateValues] = useState<UpdateNpcDto>(initialState);
   const [pending, setPending] = useState(false);
   const [availableClasses, setAvailableClasses] = useState<Array<string>>([]);
 
   const handleInputChange = (prop: keyof UpdateNpcDto, value: unknown) => {
     setForm({ ...form, [prop]: value });
-    if (npc[prop] !== value) {
-      setUpdateValues({ ...updateValues, [prop]: value });
-    }
   };
 
   const handleClassChange = (value: string[]) => {
     setForm({ ...form, class: [...(value || [])] });
-    if (!isEqual(npc.class, value)) {
-      setUpdateValues({ ...updateValues, class: [...(value || [])] });
-    }
   };
 
   const handleDialogClose = (needsReload = false) => {
@@ -116,7 +104,6 @@ const EditImageDialog = ({ onClose, npc, ...rest }: DialogProps & EditImageDialo
     };
   }, [rest.open]);
 
-  console.log('form', form);
   return (
     <NpcDialog {...rest} onClose={() => handleDialogClose()}>
       <DialogTitle id="alert-dialog-slide-title">{t('dialogs.editImage.title')}</DialogTitle>

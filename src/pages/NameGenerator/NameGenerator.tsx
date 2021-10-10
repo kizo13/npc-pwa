@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100px',
     marginRight: theme.spacing(2),
   },
-  filterButton: {},
   nameContainer: {
     backgroundColor: grey[100],
   },

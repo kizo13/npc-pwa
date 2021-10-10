@@ -61,9 +61,6 @@ const useStyles = makeStyles((theme) => ({
     padding: '10px 0',
     backgroundColor: 'rgba(0, 0, 0, 0.12)',
   },
-  uploadLabelButton: {
-    marginLeft: '10px',
-  },
   formGenderButton: {
     flex: 1,
   },
