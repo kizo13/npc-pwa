@@ -6,6 +6,7 @@ export const ROUTES = {
   notes: '/notes',
   namegenerator: '/namegenerator',
   login: '/login',
+  preview: '/preview/:hash',
 };
 
 export const LIMIT_TO_PAGE = 12;

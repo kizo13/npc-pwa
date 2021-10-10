@@ -57,9 +57,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     minHeight: `calc(100vh - 48px - ${2 * theme.spacing(3)}px)`,
   },
-  chip: {
-    margin: theme.spacing(0.5),
-  },
   divider: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -296,16 +293,18 @@ const ListNotes: React.FunctionComponent<{}> = () => {
                           {!deletePending && <Delete />}
                         </IconButton>
                       </div>
-                      <div>
-                        <ShareButton
-                          color="primary"
-                          size="small"
-                          text={note.name}
-                          url={`${window.location.protocol}//${window.location.host}/preview/${note.hash}`}
-                        >
-                          <Share />
-                        </ShareButton>
-                      </div>
+                      {!note.isPrivate && (
+                        <div>
+                          <ShareButton
+                            color="primary"
+                            size="small"
+                            text={note.name}
+                            url={`${window.location.protocol}//${window.location.host}/preview/${note.hash}`}
+                          >
+                            <Share />
+                          </ShareButton>
+                        </div>
+                      )}
                     </CardActions>
                   </Card>
                 </Grid>

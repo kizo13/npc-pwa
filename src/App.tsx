@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
 import i18next from 'i18next';
 import { StylesProvider, createGenerateClassName } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import ListImages from './pages/ListImages';
 import ListNotes from './pages/ListNotes';
 import NameGenerator from './pages/NameGenerator';
+import Preview from './pages/Preview';
 import { ROUTES } from './shared/constants';
 import apiService from './shared/services/api.service';
 import { LoginResponseDto } from './shared/dtos/api-responses.dto';
@@ -69,6 +70,7 @@ function App(): JSX.Element {
                       <ProtectedRoute exact path={ROUTES.notes} component={ListNotes} layout={AppBar} />
                       <ProtectedRoute exact path={ROUTES.namegenerator} component={NameGenerator} layout={AppBar} />
                       <PublicRoute exact path={ROUTES.login} component={Login} />
+                      <Route path={ROUTES.preview} component={Preview} />
                     </Switch>
                   </ToolbarContext.Provider>
                 </FilterContext.Provider>

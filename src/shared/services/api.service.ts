@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { NoteDto, NpcDto, UserDto } from '../dtos/entities.dto';
+import {
+  NoteDto, NpcDto, PreviewNoteDto, UserDto,
+} from '../dtos/entities.dto';
 import { LoginResponseDto, TokenResponseDto } from '../dtos/api-responses.dto';
 import { NoteFilterDto, NpcFilterDto } from '../../contexts/filterContext';
 import { PaginationDto, PaginatedDto } from '../dtos/pagination.dto';
@@ -139,6 +141,10 @@ const api = {
 
   deleteNote: (noteId: number): Promise<null> => protectedApi
     .delete(`/notes/${noteId}`),
+
+  getPreview: (hash: string): Promise<PreviewNoteDto> => protectedApi
+    .get<PreviewNoteDto>(`/preview/${hash}`)
+    .then((res) => res.data),
 };
 
 protectedApi.interceptors.request.use((config) => {

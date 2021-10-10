@@ -44,3 +44,9 @@ export interface NoteDto {
   isPrivate: boolean;
   hash: string;
 }
+
+export interface PreviewNoteDto {
+  name: string;
+  description: string;
+  blob: string;
+}
