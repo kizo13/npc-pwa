@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     background: 'linear-gradient(90deg, rgba(43,26,18,1) 0%, rgba(69,45,33,1) 50%, rgba(43,26,18,1) 100%)',
     marginTop: '10px',
     marginRight: '5px',
-    marginBottom: '24px',
+    marginBottom: '0',
     marginLeft: '-20px',
     padding: '24px 0',
     width: '516px',
@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
   frameTextBox: {
     boxShadow: '0 1px 2px 1px #2e2422, inset 0 0 8px 12px #171314',
     overflow: 'hidden',
-    margin: '0 10px',
+    margin: '24px 10px 0',
     color: '#D9B9A2',
     display: 'flex',
     flexDirection: 'column',
@@ -111,7 +111,9 @@ const Preview: React.FunctionComponent<{}> = () => {
                   <img className={classes.image} src={`data:image/png;base64,${notePreview.blob}`} alt="preview" />
                 </div>
                 <div className={classes.frameName}>{ notePreview.name }</div>
-                <div className={classes.frameTextBox}>{ notePreview.description }</div>
+                {notePreview.description && (
+                  <div className={classes.frameTextBox}>{ notePreview.description }</div>
+                )}
               </div>
             </div>
           </Box>
